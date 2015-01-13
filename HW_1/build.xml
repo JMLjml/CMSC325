@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<project name="CMSC325_HW_1" default="compile" >
+  <description>Compiles the simple simulation CoinFlipper</description>
+
+  <target name="init">
+    <mkdir dir="bin" />
+    <mkdir dir="dist" />
+  </target>
+
+  <target name="compile" depends="init"
+      description="Compiles the source code">
+    <javac srcdir="src"
+      destdir="bin"
+    />
+  </target>
+
+  <target name="archive" depends="compile"
+      description="Create the JAR file">
+    <jar destfile="dist/CoinFlipper.jar"
+      basedir="bin"
+    />
+  </target>
+
+  <target name="execute" depends="compile"
+      description="Runs the simulation">
+    <echo level="warning" message="running" />
+    <java
+      classname="coinflipper.CoinFlipper"
+      classpath="bin">
+    </java>
+  </target>
+
+  <target name="clean" depends="init"
+      description="Cleans the project directories">
+    <delete dir="bin" />
+    <delete dir="dist" />
+  </target>
+
+</project>

@@ -1,0 +1,31 @@
+Part 1:
+
+Install your jMonkey SDK development environment (IDE)
+
+Part 2:
+
+Using either the jMonkey SDK IDE or another Java SDK of your choice, create a basic coin-flip guessing game based on the following:
+
+        Download the repository at https://github.com/seccodingguy/CMSC325/tree/master/src/cmsc325gameconcepts
+
+        Using the Strategy and StrategyRandom class, create a game that prompts the user to choose heads or tails, flips a virtual coin, and then displays the results to the user. The game must continue until 100 flips have been completed. Save the results of the flip results in a format of your choosing.
+        
+        Modify the code to include the StrategyProbability class, using the results saved from the StrategyRandom as the starting values for the setMoves() function. The game must continue until 100 flips have been completed. Save the results of the flip results in a format of your choosing and separate from the StrategyRandom results.
+        
+        For both 2 and 3, generate statistics on the odds of getting the right guess as well as the number of heads and tails flipped, displayed, respectively, to the user as well as saved with the results.
+        The program does not have to use graphics of actual coins - this is optional.
+        The 100 flips can be generated manually, i.e. user pressing a button, or automatically.
+
+What to submit:
+
+    A screenshot showing the installed and running jMonkey SDK IDE
+    
+    All the source code for your game.
+    
+    The output results from the execution of both the StategyRandom and StrategyProbability functionality
+    
+    A text file briefly describing how to import, compile, run, and play your game.
+    
+    Compare the results of the StrategyRandom and StrategyProbability functionality, writing a 250 word summary of what your expectations were vs. what the two different strategies produced. Also, provide an answer in the summary to the following questions: 1) Does either strategy produce a near 50% probability? And 2) Which strategy produced more or less?
+
+All of the above should be attached to your assignment as a single *.zip file. The naming format for the .zip file is YOURLASTNAME_HOMEWORK1_CMSC325.zip
