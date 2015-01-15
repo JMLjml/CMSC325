@@ -108,10 +108,16 @@ public class CoinFlipper {
 
     ArrayList<Integer> userGuesses = new ArrayList<Integer>();
     ArrayList<Integer> coinFlips = new ArrayList<Integer>();
+    
+    // Initialize the coin with the last move of the user
+    // Might need to fix this or do this somewhere else
+    coin.saveOpponentMove(user.getMyLastMove());
 
     for(int i = 0; i < 100; i++) {
       user.saveMyMove(user.nextMove());
       coin.saveMyMove(coin.nextMove());
+      
+      coin.saveOpponentMove(user.myLastMove());
 
       userGuesses.add(user.myLastMove);
       coinFlips.add(coin.myLastMove);
