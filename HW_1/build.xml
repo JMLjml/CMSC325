@@ -9,7 +9,8 @@
 
   <target name="compile" depends="init"
       description="Compiles the source code">
-    <javac srcdir="src"
+    <javac includeantruntime="false"
+      srcdir="src"
       destdir="bin"
     />
   </target>
