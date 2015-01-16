@@ -161,7 +161,6 @@ public class CoinFlipper {
     output.println("The number of correct guesses was: " + count_correct);
     output.println("The percent of correct guesses was: " + percent + " %");
 
-    output.close();
-    
+    output.close();    
 	}
 }
