@@ -15,7 +15,7 @@ public class StrategyRandom extends Strategy {
    * Encoding for a strategy.
    */
 
-  // 0 = defect, 1 = cooperate
+  // 0 = heads, 1 = tails
 
   public StrategyRandom() {
     name = "Random";

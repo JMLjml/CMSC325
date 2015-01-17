@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class StrategyProbabilistic extends Strategy {
 
-  // 0 = defect, 1 = cooperate
+  // 0 = heads, 1 = tails
 
   public ArrayList<Integer> opponentMoves;
 

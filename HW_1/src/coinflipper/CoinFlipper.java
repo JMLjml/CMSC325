@@ -1,3 +1,11 @@
+/*
+@AUTHOR: John M Lasheski
+@COURSE: CMSC325, Intro to Game Development, UMUC
+@CREDITTO: John M Lasheski
+
+CoinFlipper class used in a simple simulation for HW_1.
+ */
+
 package coinflipper;
 
 public class CoinFlipper {
@@ -67,15 +75,19 @@ public class CoinFlipper {
 
   public static void randomFlip() throws Exception {
     
+    // Create the data file for storing the results of the ramndom coin flips
     java.io.File file = new java.io.File("random.txt");
     java.io.PrintWriter output = new java.io.PrintWriter(file);
 
+    // Create the random coin
     Strategy coin = new StrategyRandom();
 
+    // For counting correct gueses and the number of heads
     int count_correct = 0;
     int count_heads = 0;
 
 
+    // Run 100 flips and count
     for(int i = 0; i < 100; i++) {
       coin.saveMyMove(coin.nextMove());
 
@@ -90,6 +102,7 @@ public class CoinFlipper {
       }
     }
 
+    // Print the results to the console and write them to the random.txt file
     double percent = (double)count_correct;
 
     System.out.println("Results of StrategyRandom Coin Flips");
@@ -119,18 +132,24 @@ public class CoinFlipper {
     java.io.File file = new java.io.File("random.txt");
     java.util.Scanner input = new java.util.Scanner(file);
 
-    StrategyProbabilistic coin = new StrategyProbabilistic();
 
+    // Create the probabilistic coin and seed it
+    StrategyProbabilistic coin = new StrategyProbabilistic();
     coin.setMoves(input.nextLine());
 
     input.close();
 
+    // Create the data file for storing the results of the probabilistic flips    
     file = new java.io.File("probabilistic.txt");
     java.io.PrintWriter output = new java.io.PrintWriter(file);
 
+
+    // For counting correct gueses and the number of heads
     int count_correct = 0;
     int count_heads = 0;
 
+
+    // Run 100 flips and count
     for(int i = 0; i < 100; i++) {
       coin.saveMyMove(coin.nextMove());
 
@@ -145,6 +164,9 @@ public class CoinFlipper {
       }
     }
     
+
+    
+    // Print the results to the console and write them to the random.txt file
     double percent = (double)count_correct;
 
     System.out.println("Results of StrategyProbabilistic Coin Flips");
