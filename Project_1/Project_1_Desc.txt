@@ -1,0 +1,37 @@
+You will use the jMonkey SDK engine and BasicGame with the Scene 
+from Homework 2 to modify and enhance your scene. The requirements
+are as follows:
+
+ 
+
+    1. The scene will include at least 10 objects 5 of which are 
+       moveable and the other 5 immoveable objects.
+    
+    2. The object types can vary (i.e. box, sphere, etc.), and each 
+       type must be distinguishable using different materials.
+    
+    3. Each object must be bound to allow for collision.
+    
+    4. At least two characters must also be part of the scene and 
+       the characters must be allowed to rotate left and right.
+    
+    5. It is strongly encouraged to leverage the Physics, Character,
+       and Input classes to complete the Project (see the Week 3 video and source code link).
+    
+    6. The projectiles used as "bullets" can be of any object type
+       of your choosing.
+    
+    7. The scene must include a BitmapText that is updated with a 
+       "Hit" when a collision occurs (HINT: Use the result of the 
+       CollisionResult object)
+
+ 
+
+Deliverables include:
+
+    a. All source code and project files (use the Export Project 
+       from the File menu to create a zip file)
+    
+    b. ZIP file naming format is LASTNAME_PROJECT1_CMSC325.zip
+    
+    c. Compile and run instructions
