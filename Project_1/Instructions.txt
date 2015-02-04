@@ -1,0 +1,12 @@
+﻿John Lasheski
+CMSC325  Spring 2015
+Project 1
+
+Compilation:
+
+Import the .zip file into JMonkey IDE as a new project and run like any other project.
+
+
+Playing:
+
+There are two characters whose movements are linked together. Left click the mouse button to shoot spheres. Only the wooden crates count as targets. The pyramids are immovable and do not count. The characters can be moved and shot by they will not count as targets.
