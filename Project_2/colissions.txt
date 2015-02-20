@@ -1,0 +1,80 @@
+
+Colission number: 1
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 2
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 3
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 4
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 5
+sphere1 colided with sphere2 at position:
+sphere1: (246.98207, 22.776394, 246.41736)
+sphere2: (234.40454, 13.69407, 227.53842)
+
+Colission number: 6
+sphere1 colided with sphere3 at position:
+sphere1: (246.52206, 24.442867, 246.10695)
+sphere3: (238.32889, 48.69541, 243.39642)
+
+Colission number: 7
+sphere2 colided with sphere3 at position:
+sphere2: (203.59532, 12.491262, 217.66095)
+sphere3: (223.0074, 26.39759, 229.68062)
+
+Colission number: 8
+sphere1 colided with sphere3 at position:
+sphere1: (243.74554, 17.645842, 248.93573)
+sphere3: (228.32977, 34.64295, 231.23871)
+
+Colission number: 9
+sphere2 colided with sphere3 at position:
+sphere2: (222.02174, 18.687801, 210.87119)
+sphere3: (217.01344, 44.52777, 203.21965)
+
+Colission number: 10
+sphere1 colided with sphere2 at position:
+sphere1: (235.09375, 29.352962, 233.31967)
+sphere2: (225.85251, 11.348761, 210.58994)
+
+Colission number: 11
+sphere2 colided with sphere3 at position:
+sphere2: (206.35117, 11.589392, 221.51476)
+sphere3: (211.46936, 32.969875, 230.47078)
+
+Colission number: 12
+sphere1 colided with sphere2 at position:
+sphere1: (222.03044, 15.674513, 211.18533)
+sphere2: (206.97691, 22.909744, 226.59564)
+
+Colission number: 13
+sphere1 colided with sphere3 at position:
+sphere1: (243.15453, 11.850836, 219.88095)
+sphere3: (228.9636, 22.400972, 209.65334)
+
+Colission number: 14
+sphere2 colided with sphere3 at position:
+sphere2: (243.27002, 11.960953, 209.49522)
+sphere3: (224.59418, 12.006021, 218.84396)
+
+Colission number: 15
+sphere1 colided with sphere2 at position:
+sphere1: (239.22794, 11.999377, 231.36705)
+sphere2: (236.65681, 12.000592, 211.112)
+
+Colission number: 16
+sphere2 colided with sphere3 at position:
+sphere2: (221.6487, 11.999766, 211.90796)
+sphere3: (218.21672, 11.999684, 232.38834)

@@ -1,0 +1,37 @@
+
+Colission number: 1
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 2
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 3
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 4
+sphere1 colided with sphere2 at position:
+sphere1: (246.66669, 20.639418, 244.66669)
+sphere2: (233.33331, 12.639417, 230.66669)
+
+Colission number: 5
+sphere1 colided with sphere2 at position:
+sphere1: (246.98207, 22.776394, 246.41736)
+sphere2: (234.40454, 13.69407, 227.53842)
+
+Colission number: 6
+sphere1 colided with sphere3 at position:
+sphere1: (246.52206, 24.442867, 246.10695)
+sphere3: (238.32889, 48.69541, 243.39642)
+
+Colission number: 7
+sphere2 colided with sphere3 at position:
+sphere2: (203.59532, 12.491262, 217.66095)
+sphere3: (223.0074, 26.39759, 229.68062)
+
+The monkey was not in time. The spheres collided 70 times. Exiting program.
