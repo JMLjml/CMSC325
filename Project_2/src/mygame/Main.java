@@ -25,6 +25,14 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import AI.AIControl_SM;
+import characters.AICharacterControl;
+import characters.MyGameCharacterControl;
+import characters.NavMeshNavigationControl;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 
 
 /**
@@ -50,6 +58,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   
   private int colission_count = 0;
   
+
+  
   
   // Text for displaying sphere position
   private BitmapText sp1Text, sp2Text, sp3Text;
@@ -61,7 +71,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   public static java.io.PrintWriter output;
      
   static {
-    floor = new Box(30f, 2f, 30f);
+//    floor = new Box(30f, 2f, 30f);
+        floor = new Box(256, 2f, 256f);
+
     floor.scaleTextureCoordinates(new Vector2f(3, 6));
           
     side1 = new Box(30f, 30f, 0.1f);
@@ -123,7 +135,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     // Add the AI monkey to the scene
     setupCharacter(scene);
     
-    // Add the HUD
+   // Add the HUD
     initHud();
    
   }
@@ -150,8 +162,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             
     Spatial terrain = scene.getChild("terrain-P2_Scene");
     terrain.addControl(new RigidBodyControl(0));
+ 
+    
     bulletAppState.getPhysicsSpace().addAll(terrain);
-        
+    
     initMaterials();
     initCube();
     initSpheres();
@@ -197,7 +211,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     floor_phy = new RigidBodyControl(0.0f);
     floor_geo.addControl(floor_phy);
     bulletAppState.getPhysicsSpace().add(floor_phy);
-    floor_phy.setPhysicsLocation(new Vector3f(226, 0f, 226));
+    floor_phy.setPhysicsLocation(new Vector3f(0, -1.8f, 0));
     floor_phy.setFriction(0.0f);
     floor_phy.setRestitution(.1f);
           
@@ -333,22 +347,52 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   
   
   private void setupCharacter(Node scene) {
-   // Load model, attach to character node
+  
+     // Load model, attach to character node
    Node aiCharacter = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
 
-   AICharacterControl physicsCharacter = new AICharacterControl(0.3f, 2.5f, 8f);
+   AICharacterControl physicsCharacter = new AICharacterControl(0.3f, 2.5f, 1f);
    aiCharacter.addControl(physicsCharacter);
    bulletAppState.getPhysicsSpace().add(physicsCharacter);
-   aiCharacter.setLocalTranslation(0, 10, 0);
-   aiCharacter.setLocalScale(2f);
+   //aiCharacter.setLocalTranslation(250f, 165f, 250f);
+   
+   
+   
+   aiCharacter.setLocalScale(50f);
    scene.attachChild(aiCharacter);
    NavMeshNavigationControl navMesh = new NavMeshNavigationControl((Node) scene);
         
    aiCharacter.addControl(navMesh);
-   navMesh.moveTo(new Vector3f(245, 2, 245));
+   navMesh.moveTo(new Vector3f(255, 2, 255));
+   
+   //this.rootNode.attachChild(aiCharacter);
         //aiCharacter.addControl(new NavMeshNavigationControl((Node) scene));
         
         //aiCharacter.getControl(NavMeshNavigationControl.class).moveTo(new Vector3f(80, 20, 20));
+   
+   
+   
+   
+//   
+  // Node jaime = (Node)assetManager.loadModel("/Models/Jaime/Jaime.j3o");
+  //jaime.setLocalTranslation(-12, 60, 5);
+  // jaime.setLocalScale(60, 60, 60);
+//   
+ //  MyGameCharacterControl jaimeControl = new MyGameCharacterControl(0.5f,2.5f,8f);   
+  // jaimeControl.setGravity(normalGravity);
+  // jaime.addControl(jaimeControl);
+  // bulletAppState.getPhysicsSpace().add(jaimeControl);
+  // rootNode.attachChild(jaime);
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
   }
   
   
@@ -361,7 +405,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     sp1Text.setText("");
     sp1Text.setColor(ColorRGBA.Red);
     sp1Text.setSize(guiFont.getCharSet().getRenderedSize());   
-    sp1Text.setLocalTranslation(settings.getWidth() / 2 - hitText.getLineWidth() / 2, settings.getHeight() - 40, 0f);
+    sp1Text.setLocalTranslation(settings.getWidth() / 2 - sp1Text.getLineWidth() / 2, settings.getHeight() - 40, 0f);
     guiNode.attachChild(sp1Text);
     
     sp2Text = new BitmapText(myFont, true);
@@ -369,7 +413,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     sp2Text.setText("");
     sp2Text.setColor(ColorRGBA.Red);
     sp2Text.setSize(guiFont.getCharSet().getRenderedSize());   
-    sp2Text.setLocalTranslation(settings.getWidth() / 2 - hitText.getLineWidth() / 2, settings.getHeight() - 50, 0f);
+    sp2Text.setLocalTranslation(settings.getWidth() / 2 - sp2Text.getLineWidth() / 2, settings.getHeight() - 60, 0f);
     guiNode.attachChild(sp2Text);
     
     sp3Text = new BitmapText(myFont, true);
@@ -377,7 +421,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     sp3Text.setText("");
     sp3Text.setColor(ColorRGBA.Red);
     sp3Text.setSize(guiFont.getCharSet().getRenderedSize());   
-    sp3Text.setLocalTranslation(settings.getWidth() / 2 - hitText.getLineWidth() / 2, settings.getHeight() - 60, 0f);
+    sp3Text.setLocalTranslation(settings.getWidth() / 2 - sp3Text.getLineWidth() / 2, settings.getHeight() - 80, 0f);
     guiNode.attachChild(sp3Text);
   } 
   
@@ -388,15 +432,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
    //guiNode.detachChildNamed("hitText");
     
     // update the HUD
-    sp1Text.setText(sphere1_phy.getPhysicsLocation());
-    sp2Text.setText(sphere2_phy.getPhysicsLocation());
-    sp3Text.setText(sphere3_phy.getPhysicsLocation());
+    sp1Text.setText("sphere 1 " + sphere1_phy.getPhysicsLocation().toString());
+    sp2Text.setText("sphere 2 " + sphere2_phy.getPhysicsLocation().toString());
+    sp3Text.setText("sphere 3 " + sphere3_phy.getPhysicsLocation().toString());
     
     // Re attached the hud text
     //guiNode.attachChild(hudText);
     
-    if(colission_count >= 70) {
-      output.println("\nThe monkey was not in time. The spheres collided 70 times. Exiting program.");
+    if(colission_count >= 100) {
+      output.println("\nThe monkey was not in time. The spheres collided 100 times. Exiting program.");
       output.close();
       app.stop();
     }    

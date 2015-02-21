@@ -21,60 +21,300 @@ sphere2: (233.33331, 12.639417, 230.66669)
 
 Colission number: 5
 sphere1 colided with sphere2 at position:
-sphere1: (246.98207, 22.776394, 246.41736)
-sphere2: (234.40454, 13.69407, 227.53842)
+sphere1: (246.98207, 22.776396, 246.41745)
+sphere2: (234.40454, 13.694067, 227.5384)
 
 Colission number: 6
 sphere1 colided with sphere3 at position:
-sphere1: (246.52206, 24.442867, 246.10695)
-sphere3: (238.32889, 48.69541, 243.39642)
+sphere1: (246.52206, 24.442902, 246.10718)
+sphere3: (238.32889, 48.69539, 243.39638)
 
 Colission number: 7
 sphere2 colided with sphere3 at position:
-sphere2: (203.59532, 12.491262, 217.66095)
-sphere3: (223.0074, 26.39759, 229.68062)
+sphere2: (203.82149, 10.0180025, 217.76851)
+sphere3: (222.80406, 26.844372, 229.56416)
 
 Colission number: 8
 sphere1 colided with sphere3 at position:
-sphere1: (243.74554, 17.645842, 248.93573)
-sphere3: (228.32977, 34.64295, 231.23871)
+sphere1: (241.26387, 16.85649, 245.91794)
+sphere3: (233.13257, 37.299084, 235.31696)
 
 Colission number: 9
-sphere2 colided with sphere3 at position:
-sphere2: (222.02174, 18.687801, 210.87119)
-sphere3: (217.01344, 44.52777, 203.21965)
+sphere1 colided with sphere3 at position:
+sphere1: (241.14082, 14.17655, 240.34673)
+sphere3: (242.28406, 38.76624, 242.88539)
 
 Colission number: 10
 sphere1 colided with sphere2 at position:
-sphere1: (235.09375, 29.352962, 233.31967)
-sphere2: (225.85251, 11.348761, 210.58994)
+sphere1: (230.99893, 21.550428, 233.22365)
+sphere2: (245.9794, 31.481037, 220.10919)
 
 Colission number: 11
-sphere2 colided with sphere3 at position:
-sphere2: (206.35117, 11.589392, 221.51476)
-sphere3: (211.46936, 32.969875, 230.47078)
+sphere1 colided with sphere3 at position:
+sphere1: (215.8215, 20.2648, 241.9735)
+sphere3: (235.61868, 10.16705, 235.06232)
 
 Colission number: 12
-sphere1 colided with sphere2 at position:
-sphere1: (222.03044, 15.674513, 211.18533)
-sphere2: (206.97691, 22.909744, 226.59564)
+sphere2 colided with sphere3 at position:
+sphere2: (245.38898, 30.785168, 212.92165)
+sphere3: (238.8157, 10.198173, 213.96773)
 
 Colission number: 13
 sphere1 colided with sphere3 at position:
-sphere1: (243.15453, 11.850836, 219.88095)
-sphere3: (228.9636, 22.400972, 209.65334)
+sphere1: (243.08989, 13.153135, 236.71457)
+sphere3: (224.19998, 9.996871, 226.43936)
 
 Colission number: 14
 sphere2 colided with sphere3 at position:
-sphere2: (243.27002, 11.960953, 209.49522)
-sphere3: (224.59418, 12.006021, 218.84396)
+sphere2: (227.56123, 20.936638, 206.5762)
+sphere3: (209.67836, 10.604067, 210.76457)
 
 Colission number: 15
-sphere1 colided with sphere2 at position:
-sphere1: (239.22794, 11.999377, 231.36705)
-sphere2: (236.65681, 12.000592, 211.112)
+sphere1 colided with sphere3 at position:
+sphere1: (207.08255, 10.197358, 226.58754)
+sphere3: (218.86131, 10.282091, 209.74683)
 
 Colission number: 16
+sphere1 colided with sphere3 at position:
+sphere1: (217.01903, 10.200233, 243.81429)
+sphere3: (229.21585, 10.199378, 227.19676)
+
+Colission number: 17
+sphere1 colided with sphere2 at position:
+sphere1: (210.79387, 10.1972885, 235.66632)
+sphere2: (221.55505, 10.296161, 218.61705)
+
+Colission number: 18
 sphere2 colided with sphere3 at position:
-sphere2: (221.6487, 11.999766, 211.90796)
-sphere3: (218.21672, 11.999684, 232.38834)
+sphere2: (223.54443, 10.212912, 217.23944)
+sphere3: (243.79193, 10.200233, 212.6225)
+
+Colission number: 19
+sphere1 colided with sphere2 at position:
+sphere1: (210.12836, 10.200244, 237.01842)
+sphere2: (216.67763, 10.481624, 217.63287)
+
+Colission number: 20
+sphere2 colided with sphere3 at position:
+sphere2: (208.43127, 10.633939, 209.44499)
+sphere3: (228.80157, 10.182721, 206.20154)
+
+Colission number: 21
+sphere1 colided with sphere2 at position:
+sphere1: (210.99104, 10.200233, 238.00249)
+sphere2: (213.0624, 10.4669075, 217.43617)
+
+Colission number: 22
+sphere2 colided with sphere3 at position:
+sphere2: (220.77878, 10.204314, 207.65729)
+sphere3: (241.61513, 10.192504, 209.69417)
+
+Colission number: 23
+sphere1 colided with sphere2 at position:
+sphere1: (211.03409, 10.200232, 231.86955)
+sphere2: (211.37724, 10.634601, 211.23715)
+
+Colission number: 24
+sphere2 colided with sphere3 at position:
+sphere2: (217.12914, 10.311406, 209.32607)
+sphere3: (234.3808, 10.200232, 220.8704)
+
+Colission number: 25
+sphere1 colided with sphere3 at position:
+sphere1: (211.28964, 10.200233, 230.47418)
+sphere3: (231.49055, 10.199376, 229.02672)
+
+Colission number: 26
+sphere2 colided with sphere3 at position:
+sphere2: (221.68102, 10.201109, 210.92888)
+sphere3: (232.68893, 10.199766, 228.05913)
+
+Colission number: 27
+sphere1 colided with sphere2 at position:
+sphere1: (209.54776, 10.193275, 226.49019)
+sphere2: (218.86786, 10.2770815, 208.2515)
+
+Colission number: 28
+sphere2 colided with sphere3 at position:
+sphere2: (243.25365, 10.199766, 226.81117)
+sphere3: (232.02017, 10.2002325, 243.75465)
+
+Colission number: 29
+sphere1 colided with sphere2 at position:
+sphere1: (218.24117, 10.281503, 207.34392)
+sphere2: (238.42165, 10.200234, 208.65497)
+
+Colission number: 30
+sphere1 colided with sphere3 at position:
+sphere1: (207.8741, 10.710828, 208.99434)
+sphere3: (222.05807, 10.259047, 223.304)
+
+Colission number: 31
+sphere2 colided with sphere3 at position:
+sphere2: (241.40341, 10.199377, 214.82144)
+sphere3: (222.93605, 10.246847, 223.74849)
+
+Colission number: 32
+sphere1 colided with sphere2 at position:
+sphere1: (207.70314, 10.74419, 207.32118)
+sphere2: (227.87993, 10.199766, 210.62892)
+
+Colission number: 33
+sphere2 colided with sphere3 at position:
+sphere2: (244.1551, 10.200233, 220.07477)
+sphere3: (226.74313, 10.199377, 231.07378)
+
+Colission number: 34
+sphere1 colided with sphere2 at position:
+sphere1: (219.69691, 10.244885, 207.04118)
+sphere2: (240.40425, 10.200235, 209.86607)
+
+Colission number: 35
+sphere1 colided with sphere2 at position:
+sphere1: (215.35083, 10.387491, 207.35916)
+sphere2: (236.42061, 10.190949, 207.12045)
+
+Colission number: 36
+sphere1 colided with sphere2 at position:
+sphere1: (216.131, 10.325248, 209.31873)
+sphere2: (238.1155, 10.193287, 207.2766)
+
+Colission number: 37
+sphere1 colided with sphere3 at position:
+sphere1: (212.08672, 10.684755, 215.04135)
+sphere3: (222.75974, 10.199768, 232.51324)
+
+Colission number: 38
+sphere1 colided with sphere2 at position:
+sphere1: (211.04922, 10.715239, 213.46187)
+sphere2: (230.87805, 10.183886, 207.52023)
+
+Colission number: 39
+sphere1 colided with sphere2 at position:
+sphere1: (222.24098, 10.203736, 209.92557)
+sphere2: (243.17088, 10.199768, 208.21448)
+
+Colission number: 40
+sphere1 colided with sphere2 at position:
+sphere1: (210.78966, 10.728266, 212.32082)
+sphere2: (232.53665, 10.199771, 206.05286)
+
+Colission number: 41
+sphere1 colided with sphere3 at position:
+sphere1: (216.74812, 10.207183, 227.31091)
+sphere3: (236.82309, 10.199376, 235.43233)
+
+Colission number: 42
+sphere1 colided with sphere2 at position:
+sphere1: (211.39873, 10.396761, 219.62108)
+sphere2: (231.92073, 10.1908455, 214.00293)
+
+Colission number: 43
+sphere1 colided with sphere3 at position:
+sphere1: (213.22467, 10.200514, 223.96956)
+sphere3: (225.10768, 10.189341, 241.71991)
+
+Colission number: 44
+sphere2 colided with sphere3 at position:
+sphere2: (230.42996, 10.202899, 208.48402)
+sphere3: (242.99034, 10.200234, 225.23553)
+
+Colission number: 45
+sphere1 colided with sphere2 at position:
+sphere1: (211.08258, 10.294353, 221.64291)
+sphere2: (225.47821, 10.199424, 205.88425)
+
+Colission number: 46
+sphere1 colided with sphere3 at position:
+sphere1: (222.98883, 10.200676, 232.81683)
+sphere3: (239.70515, 10.199376, 244.66579)
+
+Colission number: 47
+sphere2 colided with sphere3 at position:
+sphere2: (245.75015, 10.200457, 224.67038)
+sphere3: (245.1506, 10.194951, 245.34827)
+
+Colission number: 48
+sphere2 colided with sphere3 at position:
+sphere2: (240.63306, 10.199377, 210.55103)
+sphere3: (234.6233, 10.200232, 230.4566)
+
+Colission number: 49
+sphere1 colided with sphere3 at position:
+sphere1: (207.90114, 10.203405, 224.36035)
+sphere3: (217.18611, 10.192481, 243.18185)
+
+Colission number: 50
+sphere2 colided with sphere3 at position:
+sphere2: (242.43065, 10.199377, 218.04489)
+sphere3: (227.63959, 10.200233, 232.9952)
+
+Colission number: 51
+sphere1 colided with sphere3 at position:
+sphere1: (221.1134, 10.200322, 225.95363)
+sphere3: (207.37889, 10.199377, 241.57736)
+
+Colission number: 52
+sphere1 colided with sphere2 at position:
+sphere1: (221.80067, 10.200378, 226.08118)
+sphere2: (236.8117, 10.200277, 209.34354)
+
+Colission number: 53
+sphere1 colided with sphere3 at position:
+sphere1: (220.7117, 10.200964, 228.13509)
+sphere3: (204.48782, 10.199378, 245.86429)
+
+Colission number: 54
+sphere1 colided with sphere2 at position:
+sphere1: (227.72934, 10.200387, 221.84796)
+sphere2: (248.38658, 10.199401, 206.43538)
+
+Colission number: 55
+sphere1 colided with sphere3 at position:
+sphere1: (226.85304, 10.199866, 219.46333)
+sphere3: (206.91595, 10.199776, 245.20915)
+
+Colission number: 56
+sphere1 colided with sphere2 at position:
+sphere1: (218.02675, 10.199916, 216.74097)
+sphere2: (259.157, 10.199772, 198.66837)
+
+Colission number: 57
+sphere1 colided with sphere3 at position:
+sphere1: (213.94305, 24.290848, 219.99084)
+sphere3: (210.87993, 6.115549, 248.13687)
+
+Colission number: 58
+sphere1 colided with sphere3 at position:
+sphere1: (251.70055, 40.2985, 224.85873)
+sphere3: (222.49567, 26.035091, 222.74988)
+
+Colission number: 59
+sphere1 colided with sphere3 at position:
+sphere1: (211.48389, 33.702, 222.33273)
+sphere3: (211.42621, 35.879055, 243.40562)
+
+Colission number: 60
+sphere1 colided with sphere3 at position:
+sphere1: (209.76494, 18.987133, 212.77974)
+sphere3: (217.52364, 13.516159, 231.54716)
+
+Colission number: 61
+sphere1 colided with sphere3 at position:
+sphere1: (220.39276, 10.192621, 227.52585)
+sphere3: (206.34769, 10.756738, 213.00577)
+
+Colission number: 62
+sphere1 colided with sphere3 at position:
+sphere1: (218.78177, 10.20024, 223.87947)
+sphere3: (224.35622, 10.197826, 243.19211)
+
+Colission number: 63
+sphere1 colided with sphere3 at position:
+sphere1: (209.1262, 10.19936, 226.18765)
+sphere3: (226.99408, 10.198414, 235.33621)
+
+Colission number: 64
+sphere1 colided with sphere3 at position:
+sphere1: (217.50542, 10.200234, 241.4291)
+sphere3: (236.92114, 10.200234, 236.25787)
