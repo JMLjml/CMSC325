@@ -165,7 +165,7 @@ public class PhysicsTestHelper {
         ActionListener actionListener = new ActionListener() {
 
             public void onAction(String name, boolean keyPressed, float tpf) {
-                Sphere bullet = new Sphere(22, 22, .1f, true, false);
+                Sphere bullet = new Sphere(22, 22, .20f, true, false);
                 bullet.setTextureMode(TextureMode.Projected);
                 Material mat2 = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
                 TextureKey key2 = new TextureKey("Blender/2.4x/textures/Grass_256.png");
@@ -179,10 +179,9 @@ public class PhysicsTestHelper {
                     bulletg.setLocalTranslation(app.getCamera().getLocation());
                     RigidBodyControl bulletControl = new RigidBodyControl(1);
                     bulletg.addControl(bulletControl);
-                    bulletControl.setLinearVelocity(app.getCamera().getDirection().mult(250));
+                    bulletControl.setLinearVelocity(app.getCamera().getDirection().mult(50));
                     bulletg.addControl(bulletControl);
-                    bulletControl.setRestitution(10);
-                    bulletControl.setGravity(new Vector3f(0, -2, 0));
+                    bulletControl.setRestitution(100);
                   
                     rootNode.attachChild(bulletg);
                     space.add(bulletControl);
