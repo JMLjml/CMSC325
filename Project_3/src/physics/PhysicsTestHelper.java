@@ -5,6 +5,7 @@ import appstate.InputAppState;
 import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.TextureKey;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.MeshCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -33,7 +34,31 @@ import java.util.List;
  * @author normenhansen
  * @author further modified by John M. Lasheski for CMSC325 Spring 2015
  */
-public class PhysicsTestHelper {    
+public class PhysicsTestHelper {
+  
+  public static void spawnCrates(Node rootNode, AssetManager assetManager, PhysicsSpace space,
+          List<Geometry> targets) {
+    
+//    AmbientLight light = new AmbientLight();
+//        light.setColor(ColorRGBA.LightGray);
+//        rootNode.addLight(light);
+    
+    Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+    material.setTexture("ColorMap", assetManager.loadTexture("Blender/2.4x/WoodCrate_lighter.png"));
+    
+    // create the movable boxes and assign them as targets
+    for (int i = 0; i < 5; i++) {
+      Box box = new Box(5, 5, 5);
+      Geometry boxGeometry = new Geometry("box", box);
+      boxGeometry.setMaterial(material);
+      boxGeometry.setLocalTranslation(-.005f * i, 12 + 12 * i,-40 );
+      boxGeometry.addControl(new RigidBodyControl(.001f));
+      boxGeometry.getControl(RigidBodyControl.class).setRestitution(.1f);
+      rootNode.attachChild(boxGeometry);
+      space.add(boxGeometry);
+      targets.add(boxGeometry);
+    }
+  }
 
     public static void createMyPhysicsTestWorld(Node rootNode, AssetManager assetManager,
         PhysicsSpace space, List<Geometry> targets)  {        
@@ -160,7 +185,7 @@ public class PhysicsTestHelper {
     //}
     
      public static void createBallShooter(final Application app, final Node rootNode,
-        final PhysicsSpace space) {
+        final PhysicsSpace space, final AudioNode audio_gun) {
         
         ActionListener actionListener = new ActionListener() {
 
@@ -181,10 +206,11 @@ public class PhysicsTestHelper {
                     bulletg.addControl(bulletControl);
                     bulletControl.setLinearVelocity(app.getCamera().getDirection().mult(50));
                     bulletg.addControl(bulletControl);
-                    bulletControl.setRestitution(100);
+                    bulletControl.setRestitution(1.5f);
                   
                     rootNode.attachChild(bulletg);
                     space.add(bulletControl);
+                    audio_gun.playInstance(); // play each instance once!
                     
                     
                    

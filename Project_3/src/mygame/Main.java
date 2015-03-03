@@ -15,11 +15,17 @@ import animations.CharacterInputAnimationAppState;
 import characters.ChaseCamCharacter;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.asset.TextureKey;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh.Type;
+import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
@@ -38,7 +44,7 @@ import physics.PhysicsTestHelper;
  * test
  * @author normenhansen
  */
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements PhysicsCollisionListener {
   
   private BulletAppState bulletAppState;
   private RigidBodyControl landscape;
@@ -50,6 +56,12 @@ public class Main extends SimpleApplication {
   private RigidBodyControl side1_phy, side2_phy, side3_phy, side4_phy;
   private static final Box side1, side2, side3, side4;
   private Material wall_material;
+  
+   private AudioNode audio_gun, audio_explosion, audio_nature, audio_footsteps;
+  
+  
+  private int crateSpawnTimer = 0;
+  private ParticleEmitter explosion;
   
   static {
     side1 = new Box(256, 5, 0.5f);
@@ -76,6 +88,8 @@ public class Main extends SimpleApplication {
     Main app = new Main();
     app.start();
   }
+  private float COUNT_FACTOR_F;
+  private boolean POINT_SPRITE;
 
   @Override
   public void simpleInitApp() {
@@ -112,6 +126,10 @@ public class Main extends SimpleApplication {
      
      initMaterials();
      initWalls();
+     initAudio();
+     
+      // add ourselves as collision listener
+    getPhysicsSpace().addCollisionListener(this);
      
      
       createPlayerCharacter();
@@ -120,9 +138,10 @@ public class Main extends SimpleApplication {
 //        PhysicsTestHelper.createBallShooter(this,rootNode,bulletAppState.getPhysicsSpace(),
 //            sinbadAppState, targets, guiNode, hitText);
 //        
-        PhysicsTestHelper.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
-        PhysicsTestHelper.createMyPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
+        PhysicsTestHelper.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace(), audio_gun);
+      //  PhysicsTestHelper.createMyPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
 
+        PhysicsTestHelper.spawnCrates(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
         
         
         //Add a custom font and text to the scene
@@ -143,6 +162,36 @@ public class Main extends SimpleApplication {
   private PhysicsSpace getPhysicsSpace() {
         return bulletAppState.getPhysicsSpace();
     }
+  
+  
+    /** We create two audio nodes. */
+  private void initAudio() {
+    /* gun shot sound is to be triggered by a mouse click. */
+    //audio_gun = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
+    audio_gun = new AudioNode(assetManager, "Sounds/message.ogg", false);
+
+    audio_gun.setPositional(false);
+    audio_gun.setLooping(false);
+    audio_gun.setVolume(2);
+    rootNode.attachChild(audio_gun);
+    
+    /* explosion sound is to be triggered by a collision. */
+    audio_explosion = new AudioNode(assetManager, "Sound/Effects/Bang.wav", false);
+    audio_explosion.setPositional(true);
+    audio_explosion.setLooping(false);
+    audio_explosion.setVolume(1);
+    rootNode.attachChild(audio_explosion);
+
+ 
+    /* nature sound - keeps playing in a loop. */
+    audio_nature = new AudioNode(assetManager, "Sounds/Noise.wav", true);
+    audio_nature.setPositional(false);
+    audio_nature.setLooping(true);  // activate continuous playing
+    //audio_nature.setPositional(true);   
+    audio_nature.setVolume(1);
+    rootNode.attachChild(audio_nature);
+    audio_nature.play(); // play continuously!
+  }
   
    private void createPlayerCharacter() {
         mainPlayer = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
@@ -283,20 +332,134 @@ public class Main extends SimpleApplication {
    
    
    
-   
-   
   @Override
   public void simpleUpdate(float tpf) {
     //TODO: add update code
     
     System.out.println(targets.size());
-    System.out.println(targets.get(0).getName());
-    System.out.println(targets.get(29).getName());
+    
+    if(targets.size() > 0) {
+      System.out.println(targets.get(0).getName());
+    }
+    
+    if(targets.size() == 0) {
+      crateSpawnTimer--;
+      System.out.println(crateSpawnTimer);
+      
+      if(crateSpawnTimer == 0) {
+        //explosion.killAllParticles();
+        PhysicsTestHelper.spawnCrates(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
+      }
+    }
+   // System.out.println(targets.get(29).getName());
 
   }
 
   @Override
   public void simpleRender(RenderManager rm) {
     //TODO: add render code
+  }
+
+
+
+public void collision(PhysicsCollisionEvent event) {
+  
+  //System.out.println("Collision Detected");
+  
+  if("box".equals(event.getNodeA().getName()) || "box".equals(event.getNodeB().getName())) {
+    if("bullet".equals(event.getNodeA().getName()) || "bullet".equals(event.getNodeB().getName())) {
+      System.out.println("A box was hit by a bullet");
+      
+      if("box".equals(event.getNodeA().getName())) {
+        targets.remove(event.getNodeA());
+      } else if ("box".equals(event.getNodeB().getName())) {
+        targets.remove(event.getNodeB());
+      }
+      
+      
+      
+      
+      //Trigger an explosion
+      audio_explosion.playInstance(); // play each instance once!
+      explosion = new ParticleEmitter("My explosion effect", Type.Triangle, 30);
+      
+      explosion.setSelectRandomImage(true);
+        explosion.setStartColor(new ColorRGBA(1f, 0.4f, 0.05f, (float) (1f / COUNT_FACTOR_F)));
+        explosion.setEndColor(new ColorRGBA(.4f, .22f, .12f, 0f));
+        explosion.setStartSize(1.3f);
+        explosion.setEndSize(2f);
+        explosion.setShape(new EmitterSphereShape(Vector3f.ZERO, 1f));
+        explosion.setParticlesPerSec(0);
+        explosion.setGravity(0, -5, 0);
+        explosion.setLowLife(.4f);
+        explosion.setHighLife(.5f);
+        explosion.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 7, 0));
+        explosion.getParticleInfluencer().setVelocityVariation(1f);
+        explosion.setImagesX(2);
+        explosion.setImagesY(2);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
+        mat.setTexture("Texture", assetManager.loadTexture("Effects/Explosion/flame.png"));
+        mat.setBoolean("PointSprite", POINT_SPRITE);
+        explosion.setMaterial(mat);
+
+      
+      
+      
+      rootNode.attachChild(explosion);
+      explosion.setLocalTranslation(event.getNodeB().getLocalTranslation());
+      explosion.emitAllParticles();
+      
+      this.rootNode.detachChild(event.getNodeA());
+      this.rootNode.detachChild(event.getNodeB());
+      
+      this.rootNode.updateGeometricState();
+      
+      crateSpawnTimer = 300;
+      
+     
+      
+      
+
+      
+    }
+  }
+  
+  
+    
+    if("sphere1".equals(event.getNodeA().getName()) || "sphere1".equals(event.getNodeB().getName())) {
+      
+      if("sphere2".equals(event.getNodeA().getName()) || "sphere2".equals(event.getNodeB().getName())) {
+        
+       // collision_count++;
+       // output.println("\nCollision number: " + collision_count);
+        //output.print(event.getNodeA().getName() + " collided with ");        
+       // output.println(event.getNodeB().getName() + " at position:");
+        //output.println("sphere1: " + sphere1_phy.getPhysicsLocation());
+        //output.println("sphere2: " + sphere2_phy.getPhysicsLocation());
+      }
+      
+      else if("sphere3".equals(event.getNodeA().getName()) || "sphere3".equals(event.getNodeB().getName())) {
+        
+      //  collision_count++;
+        //output.println("\nCollission number: " + collision_count);
+        //output.print(event.getNodeA().getName() + " collided with ");        
+        //output.println(event.getNodeB().getName() + " at position:");
+        //output.println("sphere1: " + sphere1_phy.getPhysicsLocation());
+        //output.println("sphere3: " + sphere3_phy.getPhysicsLocation());
+      }
+    }
+    
+    else if("sphere3".equals(event.getNodeA().getName()) || "sphere3".equals(event.getNodeB().getName())) {
+      
+      if("sphere2".equals(event.getNodeA().getName()) || "sphere2".equals(event.getNodeB().getName())) {
+        
+      //  collision_count++;
+        //output.println("\nCollission number: " + collision_count);
+        //output.print(event.getNodeA().getName() + " collided with ");        
+        //output.println(event.getNodeB().getName() + " at position:");
+        //output.println("sphere2: " + sphere2_phy.getPhysicsLocation());
+        //output.println("sphere3: " + sphere3_phy.getPhysicsLocation());
+      }
+    }    
   }
 }
