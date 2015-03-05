@@ -1,7 +1,8 @@
 package mygame;
 
-import effects.Effects;
-import targets.Targets;
+import effects.Sounds;
+import effects.Explosion;
+import targets.Crates;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -58,12 +59,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   private RigidBodyControl side1_phy, side2_phy, side3_phy, side4_phy;
   private static final Box side1, side2, side3, side4;
   private Material wall_material;
-  
-   private AudioNode audio_gun, audio_explosion, audio_nature, audio_footsteps;
-  
-  
-  private int crateSpawnTimer = 0;
-  private ParticleEmitter explosion;
   
   static {
     side1 = new Box(256, 5, 0.5f);
@@ -128,7 +123,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
      
      initMaterials();
      initWalls();
-     initAudio();
+     //initAudio(); // The old way
+     rootNode.attachChild(Sounds.initAudio(assetManager));
      
       // add ourselves as collision listener
     getPhysicsSpace().addCollisionListener(this);
@@ -140,10 +136,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 //        PhysicsTestHelper.createBallShooter(this,rootNode,bulletAppState.getPhysicsSpace(),
 //            sinbadAppState, targets, guiNode, hitText);
 //        
-        PhysicsTestHelper.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace(), audio_gun);
+        PhysicsTestHelper.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
       //  PhysicsTestHelper.createMyPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
 
-        rootNode.attachChild(Targets.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
+        
+        // Create the target crates for the first time
+        rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
         
         
         //Add a custom font and text to the scene
@@ -156,7 +154,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         crosshairs.setColor(ColorRGBA.Yellow);
         crosshairs.setSize(guiFont.getCharSet().getRenderedSize());
         crosshairs.setLocalTranslation(settings.getWidth() / 2,
-            settings.getHeight() / 2 + crosshairs.getLineHeight(), 0f);
+            settings.getHeight() / 2 + crosshairs.getLineHeight() - 30, 0f);
         guiNode.attachChild(crosshairs);                 
                 
   }
@@ -165,36 +163,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         return bulletAppState.getPhysicsSpace();
     }
   
-  
-    /** We create two audio nodes. */
-  private void initAudio() {
-    /* gun shot sound is to be triggered by a mouse click. */
-    //audio_gun = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
-    audio_gun = new AudioNode(assetManager, "Sounds/message.ogg", false);
-
-    audio_gun.setPositional(false);
-    audio_gun.setLooping(false);
-    audio_gun.setVolume(2);
-    rootNode.attachChild(audio_gun);
     
-    /* explosion sound is to be triggered by a collision. */
-    audio_explosion = new AudioNode(assetManager, "Sound/Effects/Bang.wav", false);
-    audio_explosion.setPositional(true);
-    audio_explosion.setLooping(false);
-    audio_explosion.setVolume(1);
-    rootNode.attachChild(audio_explosion);
-
- 
-    /* nature sound - keeps playing in a loop. */
-    audio_nature = new AudioNode(assetManager, "Sounds/Noise.wav", true);
-    audio_nature.setPositional(false);
-    audio_nature.setLooping(true);  // activate continuous playing
-    //audio_nature.setPositional(true);   
-    audio_nature.setVolume(1);
-    rootNode.attachChild(audio_nature);
-    audio_nature.play(); // play continuously!
-  }
-  
    private void createPlayerCharacter() {
         mainPlayer = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
         mainPlayer.setLocalTranslation(200, 10, 0f);
@@ -260,20 +229,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
    
    // Initialize the collision cube used to contain the spheres
   public void initWalls() {
-    
-    // Create the floor
-//    Geometry floor_geo = new Geometry("Floor", floor);
-//    floor_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-//    floor_geo.setMaterial(wall_material);
-//    this.rootNode.attachChild(floor_geo);
-//    floor_phy = new RigidBodyControl(0.0f);
-//    floor_geo.addControl(floor_phy);
-//    bulletAppState.getPhysicsSpace().add(floor_phy);
-//    floor_phy.setPhysicsLocation(new Vector3f(0, -1.8f, 0));
-//    floor_phy.setFriction(0.0f);
-//    floor_phy.setRestitution(.1f);
-          
-    
     // Create side1
     Geometry side1_geo = new Geometry("Side1", side1);
     side1_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
@@ -327,9 +282,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     side4_phy.setFriction(0.0f);
     side4_phy.setPhysicsLocation(new Vector3f(-256, 2.5f, 0));
     side4_phy.setFriction(0.0f);
-    side4_phy.setRestitution(.1f);
-    
-   
+    side4_phy.setRestitution(.1f);   
   }
    
    
@@ -338,30 +291,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   public void simpleUpdate(float tpf) {
     //TODO: add update code
 
-    if(Targets.checkCrates()) {
-      rootNode.attachChild(Targets.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
+    if(Crates.checkCrates()) {
+      rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
     }
-
-    
-    //System.out.println(targets.size());
-    
-    // if(targets.size() > 0) {
-    // System.out.println(targets.get(0).getName());
-    //}
-    
-    //if(targets.size() == 0) {
-    //crateSpawnTimer--;
-    //System.out.println(crateSpawnTimer);
-      
-    //if(crateSpawnTimer == 0) {
-        //explosion.killAllParticles();
-//        PhysicsTestHelper.spawnCrates(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
-    //  rootNode.attachChild(Targets.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
-        
-    //}
-    // }
-   // System.out.println(targets.get(29).getName());
-
   }
 
   @Override
@@ -373,73 +305,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
 public void collision(PhysicsCollisionEvent event) {
   
-  //System.out.println("Collision Detected");
   
-  if("box".equals(event.getNodeA().getName()) || "box".equals(event.getNodeB().getName())) {
-    if("bullet".equals(event.getNodeA().getName()) || "bullet".equals(event.getNodeB().getName())) {
-      System.out.println("A box was hit by a bullet");
-
-      // crateCollision(event);
-      
-      if("box".equals(event.getNodeA().getName())) {
-        targets.remove(event.getNodeA());
-      } else if ("box".equals(event.getNodeB().getName())) {
-        targets.remove(event.getNodeB());
-      }
-      
-      
-      
-      
-      //Trigger an explosion
-      audio_explosion.playInstance(); // play each instance once!
-      explosion = new ParticleEmitter("My explosion effect", Type.Triangle, 30);
-      
-      explosion.setSelectRandomImage(true);
-        explosion.setStartColor(new ColorRGBA(1f, 0.4f, 0.05f, (float) (1f / COUNT_FACTOR_F)));
-        explosion.setEndColor(new ColorRGBA(.4f, .22f, .12f, 0f));
-        explosion.setStartSize(1.3f);
-        explosion.setEndSize(2f);
-        explosion.setShape(new EmitterSphereShape(Vector3f.ZERO, 1f));
-        explosion.setParticlesPerSec(0);
-        explosion.setGravity(0, -5, 0);
-        explosion.setLowLife(.4f);
-        explosion.setHighLife(.5f);
-        explosion.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 7, 0));
-        explosion.getParticleInfluencer().setVelocityVariation(1f);
-        explosion.setImagesX(2);
-        explosion.setImagesY(2);
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-        mat.setTexture("Texture", assetManager.loadTexture("Effects/Explosion/flame.png"));
-        mat.setBoolean("PointSprite", POINT_SPRITE);
-        explosion.setMaterial(mat);
-
-      
-      
-      
-      rootNode.attachChild(explosion);
-      explosion.setLocalTranslation(event.getNodeB().getLocalTranslation());
-      explosion.emitAllParticles();
-      
-      this.rootNode.detachChild(event.getNodeA());
-      this.rootNode.detachChild(event.getNodeB());
-      
-      this.rootNode.updateGeometricState();
-      
-      crateSpawnTimer = 300;
-      
-     
-      
-      
-
-      
-    }
-  }
-
 
   if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
     if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
-      
-      Targets.crateCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+      Crates.crateCollision(event, assetManager, bulletAppState.getPhysicsSpace());
     }
   }
   

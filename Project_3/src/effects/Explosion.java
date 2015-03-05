@@ -13,7 +13,7 @@ import com.jme3.scene.Node;
 /**
  * @author John M. Lasheski
  */
-public class Effects {
+public class Explosion {
   private static float COUNT_FACTOR_F;
   private static boolean POINT_SPRITE;
 
@@ -25,7 +25,7 @@ public class Effects {
     explosion.setStartColor(new ColorRGBA(1f, 0.4f, 0.05f, (float) (1f / COUNT_FACTOR_F)));
     explosion.setEndColor(new ColorRGBA(.4f, .22f, .12f, 0f));
     explosion.setStartSize(1.3f);
-    explosion.setEndSize(2f);
+    explosion.setEndSize(6f);
     explosion.setShape(new EmitterSphereShape(Vector3f.ZERO, 1f));
     explosion.setParticlesPerSec(0);
     explosion.setGravity(0, -5, 0);
@@ -43,5 +43,8 @@ public class Effects {
     targetNode.attachChild(explosion);
     explosion.setLocalTranslation(event.getNodeB().getLocalTranslation());
     explosion.emitAllParticles();
+
+    // Play an explosion sounds
+    Sounds.audio_explosion.playInstance();
   }
 }

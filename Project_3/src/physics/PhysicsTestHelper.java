@@ -1,6 +1,7 @@
 
 package physics;
 
+import effects.Sounds;
 import appstate.InputAppState;
 import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
@@ -185,7 +186,7 @@ public class PhysicsTestHelper {
     //}
     
      public static void createBallShooter(final Application app, final Node rootNode,
-        final PhysicsSpace space, final AudioNode audio_gun) {
+        final PhysicsSpace space) {
         
         ActionListener actionListener = new ActionListener() {
 
@@ -204,13 +205,13 @@ public class PhysicsTestHelper {
                     bulletg.setLocalTranslation(app.getCamera().getLocation());
                     RigidBodyControl bulletControl = new RigidBodyControl(1);
                     bulletg.addControl(bulletControl);
-                    bulletControl.setLinearVelocity(app.getCamera().getDirection().mult(50));
+                    bulletControl.setLinearVelocity(app.getCamera().getDirection().mult(275));
                     bulletg.addControl(bulletControl);
                     bulletControl.setRestitution(1.5f);
                   
                     rootNode.attachChild(bulletg);
                     space.add(bulletControl);
-                    audio_gun.playInstance(); // play each instance once!
+                    Sounds.audio_gun.playInstance(); // play each instance once!
                     
                     
                    

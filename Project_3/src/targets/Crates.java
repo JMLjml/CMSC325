@@ -1,6 +1,6 @@
 package targets;
 
-import effects.Effects;
+import effects.Explosion;
 import appstate.InputAppState;
 import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * @author John M. Lasheski for CMSC325 Spring 2015
  */
-public class Targets {
+public class Crates {
 
   protected static Node targetNode = new Node();
   protected static List<Geometry> crates = new ArrayList<Geometry>();
@@ -69,7 +69,7 @@ public class Targets {
 
   public static void crateCollision(PhysicsCollisionEvent event, AssetManager assetManager, PhysicsSpace space) {
     // trigger an explosion here
-    Effects.triggerExplosion(targetNode, event, assetManager);
+    Explosion.triggerExplosion(targetNode, event, assetManager);
        
     /* Remove the crate from the targetNode,the physicsSpace and the list 
        of crates. Also remove the bullet from the physicsSpace. */
