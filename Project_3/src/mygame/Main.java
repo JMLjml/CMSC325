@@ -1,5 +1,7 @@
 package mygame;
 
+import effects.Effects;
+import targets.Targets;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -141,7 +143,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         PhysicsTestHelper.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace(), audio_gun);
       //  PhysicsTestHelper.createMyPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
 
-        PhysicsTestHelper.spawnCrates(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
+        rootNode.attachChild(Targets.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
         
         
         //Add a custom font and text to the scene
@@ -335,22 +337,29 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   @Override
   public void simpleUpdate(float tpf) {
     //TODO: add update code
-    
-    System.out.println(targets.size());
-    
-    if(targets.size() > 0) {
-      System.out.println(targets.get(0).getName());
+
+    if(Targets.checkCrates()) {
+      rootNode.attachChild(Targets.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
     }
+
     
-    if(targets.size() == 0) {
-      crateSpawnTimer--;
-      System.out.println(crateSpawnTimer);
+    //System.out.println(targets.size());
+    
+    // if(targets.size() > 0) {
+    // System.out.println(targets.get(0).getName());
+    //}
+    
+    //if(targets.size() == 0) {
+    //crateSpawnTimer--;
+    //System.out.println(crateSpawnTimer);
       
-      if(crateSpawnTimer == 0) {
+    //if(crateSpawnTimer == 0) {
         //explosion.killAllParticles();
-        PhysicsTestHelper.spawnCrates(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
-      }
-    }
+//        PhysicsTestHelper.spawnCrates(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
+    //  rootNode.attachChild(Targets.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
+        
+    //}
+    // }
    // System.out.println(targets.get(29).getName());
 
   }
@@ -369,6 +378,8 @@ public void collision(PhysicsCollisionEvent event) {
   if("box".equals(event.getNodeA().getName()) || "box".equals(event.getNodeB().getName())) {
     if("bullet".equals(event.getNodeA().getName()) || "bullet".equals(event.getNodeB().getName())) {
       System.out.println("A box was hit by a bullet");
+
+      // crateCollision(event);
       
       if("box".equals(event.getNodeA().getName())) {
         targets.remove(event.getNodeA());
@@ -421,6 +432,14 @@ public void collision(PhysicsCollisionEvent event) {
       
 
       
+    }
+  }
+
+
+  if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
+    if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+      
+      Targets.crateCollision(event, assetManager, bulletAppState.getPhysicsSpace());
     }
   }
   
