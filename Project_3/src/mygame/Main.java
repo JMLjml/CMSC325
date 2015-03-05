@@ -1,7 +1,8 @@
 package mygame;
 
+import physics.BallShooter;
 import effects.Sounds;
-import effects.Explosion;
+import targets.Boulders;
 import targets.Crates;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -18,17 +19,11 @@ import animations.CharacterInputAnimationAppState;
 import characters.ChaseCamCharacter;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.asset.TextureKey;
-import com.jme3.audio.AudioNode;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh.Type;
-import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
@@ -36,16 +31,14 @@ import com.jme3.light.AmbientLight;
 import com.jme3.material.RenderState;
 import com.jme3.math.Vector2f;
 import com.jme3.renderer.queue.RenderQueue;
-import com.jme3.scene.CameraNode;
 import com.jme3.scene.Node;
 import com.jme3.texture.Texture;
 import java.util.ArrayList;
 import java.util.List;
-import physics.PhysicsTestHelper;
 
 /**
- * test
- * @author normenhansen
+ * 
+ * @author John M. Lasheski
  */
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
   
@@ -136,13 +129,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 //        PhysicsTestHelper.createBallShooter(this,rootNode,bulletAppState.getPhysicsSpace(),
 //            sinbadAppState, targets, guiNode, hitText);
 //        
-        PhysicsTestHelper.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
+        BallShooter.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
       //  PhysicsTestHelper.createMyPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
 
         
         // Create the target crates for the first time
         rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
         
+
+        // Create the target boulders for the first time
+        rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
         
         //Add a custom font and text to the scene
         BitmapFont myFont = assetManager.loadFont("Interface/Fonts/DroidSansMono.fnt");
@@ -291,10 +287,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   public void simpleUpdate(float tpf) {
     //TODO: add update code
 
+    // See if it is time to spawn more crates
     if(Crates.checkCrates()) {
       rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
     }
+
+
+    // See if it is time to spawn more boulders
+    if(Boulders.checkBoulders()) {
+      rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
+    }
   }
+
+
+
 
   @Override
   public void simpleRender(RenderManager rm) {
@@ -303,16 +309,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
 
 
-public void collision(PhysicsCollisionEvent event) {
+  public void collision(PhysicsCollisionEvent event) {
   
   
-
-  if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
-    if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
-      Crates.crateCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+    // Check for collisions with the crates
+    if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
+      if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+        Crates.crateCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+      }
     }
-  }
   
+    // check for collisions with the boulders
+    if(event.getNodeA().getName().equals("boulder") || event.getNodeB().getName().equals("boulder")) {
+      if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+        Boulders.boulderCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+      }
+    }
   
     
     if("sphere1".equals(event.getNodeA().getName()) || "sphere1".equals(event.getNodeB().getName())) {

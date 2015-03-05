@@ -103,9 +103,6 @@ public class Crates {
     }
 
     return false;
-  }
-
-  public static int getCrateSpawnTimer() {
-    return crateSpawnTimer;
-  }
+  }  
 }
+
