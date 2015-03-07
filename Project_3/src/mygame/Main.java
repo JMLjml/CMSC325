@@ -4,6 +4,7 @@ import physics.BallShooter;
 import effects.Sounds;
 import targets.Boulders;
 import targets.Crates;
+import targets.Elephant;
 import targets.EvilMonkey;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -93,7 +94,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     stateManager.attach(bulletAppState);
     
     // Turn this on for debug
-    bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
     
@@ -159,9 +160,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     rootNode.attachChild(navGeom); 
             
         
-        // Create the evilMonkey for the first time
-        rootNode.attachChild(EvilMonkey.spawnEvilMonkey(scene, assetManager, bulletAppState.getPhysicsSpace()));
-       // setupCharacter(scene);
+    // Create the evilMonkey for the first time
+    rootNode.attachChild(EvilMonkey.spawnEvilMonkey(scene, assetManager, bulletAppState.getPhysicsSpace()));
+        
+    // Create the elephant for the first time
+    rootNode.attachChild(Elephant.spawnElephant(scene, assetManager, bulletAppState.getPhysicsSpace()));
+        
+        
+        
+        
+        
+        
+        
+        
+        
         //Add a custom font and text to the scene
         BitmapFont myFont = assetManager.loadFont("Interface/Fonts/DroidSansMono.fnt");
         
@@ -335,19 +347,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
    
   @Override
   public void simpleUpdate(float tpf) {
-    //TODO: add update code
 
     // See if it is time to spawn more crates
     if(Crates.checkCrates()) {
       rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
     }
 
-
     // See if it is time to spawn more boulders
     if(Boulders.checkBoulders()) {
       rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
-    }
-    
+    }    
     
     // See where the evilMonkey is
     EvilMonkey.checkLocation();
@@ -356,7 +365,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(EvilMonkey.checkEvilMonkey()) {
       rootNode.attachChild(EvilMonkey.spawnEvilMonkey(scene, assetManager, bulletAppState.getPhysicsSpace()));
     }
-    
+
+    // See where the elephant is
+    Elephant.checkLocation();
+
+    // See if it is time to spawn another elephant
+    if(Elephant.checkElephant()) {
+      rootNode.attachChild(Elephant.spawnElephant(scene, assetManager, bulletAppState.getPhysicsSpace()));
+    }    
   }
 
 
@@ -370,16 +386,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
 
   public void collision(PhysicsCollisionEvent event) {
-    
-    //What is it called
-    // check for collisions with the evilMonkey
-    if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
-        System.out.println(event.getNodeA().getName());
-                System.out.println(event.getNodeB().getName());
-
-      }
-  
-  
+   
     // Check for collisions with the crates
     if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
@@ -393,58 +400,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Boulders.boulderCollision(event, assetManager, bulletAppState.getPhysicsSpace());
       }
     }
-  
-    
+     
     // check for collisions with the evilMonkey
     if(event.getNodeA().getName().equals("EvilMonkey") || event.getNodeB().getName().equals("EvilMonkey")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
-        
-        System.out.println("Collision with the EvilMoneky!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        
         EvilMonkey.evilMonkeyCollision(event, assetManager, bulletAppState.getPhysicsSpace());
       }
     }
     
-    
-    
-    
-      
-    
-    
-    if("sphere1".equals(event.getNodeA().getName()) || "sphere1".equals(event.getNodeB().getName())) {
-      
-      if("sphere2".equals(event.getNodeA().getName()) || "sphere2".equals(event.getNodeB().getName())) {
-        
-       // collision_count++;
-       // output.println("\nCollision number: " + collision_count);
-        //output.print(event.getNodeA().getName() + " collided with ");        
-       // output.println(event.getNodeB().getName() + " at position:");
-        //output.println("sphere1: " + sphere1_phy.getPhysicsLocation());
-        //output.println("sphere2: " + sphere2_phy.getPhysicsLocation());
+
+    // check for collisions with the elephant
+    if(event.getNodeA().getName().equals("Elephant") || event.getNodeB().getName().equals("Elephant")) {
+      if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+        Elephant.elephantCollision(event, assetManager, bulletAppState.getPhysicsSpace());
       }
-      
-      else if("sphere3".equals(event.getNodeA().getName()) || "sphere3".equals(event.getNodeB().getName())) {
-        
-      //  collision_count++;
-        //output.println("\nCollission number: " + collision_count);
-        //output.print(event.getNodeA().getName() + " collided with ");        
-        //output.println(event.getNodeB().getName() + " at position:");
-        //output.println("sphere1: " + sphere1_phy.getPhysicsLocation());
-        //output.println("sphere3: " + sphere3_phy.getPhysicsLocation());
-      }
-    }
-    
-    else if("sphere3".equals(event.getNodeA().getName()) || "sphere3".equals(event.getNodeB().getName())) {
-      
-      if("sphere2".equals(event.getNodeA().getName()) || "sphere2".equals(event.getNodeB().getName())) {
-        
-      //  collision_count++;
-        //output.println("\nCollission number: " + collision_count);
-        //output.print(event.getNodeA().getName() + " collided with ");        
-        //output.println(event.getNodeB().getName() + " at position:");
-        //output.println("sphere2: " + sphere2_phy.getPhysicsLocation());
-        //output.println("sphere3: " + sphere3_phy.getPhysicsLocation());
-      }
-    }    
+    }     
   }
 }
+

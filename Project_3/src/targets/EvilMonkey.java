@@ -33,7 +33,7 @@ public class EvilMonkey {
     evilMonkeyActive = true;
     going = true;
 
-    // Load model, attach to character node
+    // Load model
     Node aiEvilMonkey = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
 
     // Name the EvilMonkey for use in physics collision listening
@@ -45,8 +45,8 @@ public class EvilMonkey {
     // Set the start location for the EvilMonkey
     aiEvilMonkey.setLocalTranslation(startLocation);
 
-    // Add teh AI Character control to the monkey and add it to the physics space
-    AICharacterControl physicsCharacter = new AICharacterControl(1.2f, 9f, 1f);
+    // Add the AI Character control to the monkey and add it to the physics space
+    AICharacterControl physicsCharacter = new AICharacterControl(2f, 10f, 1f);
     aiEvilMonkey.addControl(physicsCharacter);
     space.add(physicsCharacter);
 
