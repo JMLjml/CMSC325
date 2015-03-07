@@ -4,6 +4,7 @@ import physics.BallShooter;
 import effects.Sounds;
 import targets.Boulders;
 import targets.Crates;
+import targets.EvilMonkey;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -16,7 +17,9 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import animations.AdvAnimationManagerControl;
 import animations.CharacterInputAnimationAppState;
+import characters.AICharacterControl;
 import characters.ChaseCamCharacter;
+import characters.NavMeshNavigationControl;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.PhysicsSpace;
@@ -44,6 +47,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   
   private BulletAppState bulletAppState;
   private RigidBodyControl landscape;
+  private Node scene;
   
   private AdvAnimationManagerControl animControl;
     
@@ -87,7 +91,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     /** Set up Physics */
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
-    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+    
+    // Turn this on for debug
+    bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
     
@@ -100,8 +106,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     //cam.update();
         
     // Add the Scene And create collision physics to match the terrain
-    Spatial scene = assetManager.loadModel("/Scenes/P3_Scene3.j3o");
-    
+    //Spatial scene = assetManager.loadModel("/Scenes/P3_Scene3.j3o");
+    scene = (Node) assetManager.loadModel("/Scenes/P3_Scene3.j3o");
+
     CollisionShape sceneShape = 
                 CollisionShapeFactory.createMeshShape(scene);
         landscape = new RigidBodyControl(sceneShape, 0);
@@ -139,7 +146,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         // Create the target boulders for the first time
         rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
+               
+       
+ 
+        //TODO: navmesh only for debug
+    Geometry navGeom = new Geometry("NavMesh");
+    navGeom.setMesh(((Geometry) scene.getChild("NavMesh" )).getMesh());
+    Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+    green.setColor("Color", ColorRGBA.Green);
+    green.getAdditionalRenderState().setWireframe(true);
+    navGeom.setMaterial(green);
+    rootNode.attachChild(navGeom); 
+            
         
+        // Create the evilMonkey for the first time
+        rootNode.attachChild(EvilMonkey.spawnEvilMonkey(scene, assetManager, bulletAppState.getPhysicsSpace()));
+       // setupCharacter(scene);
         //Add a custom font and text to the scene
         BitmapFont myFont = assetManager.loadFont("Interface/Fonts/DroidSansMono.fnt");
         
@@ -155,6 +177,31 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 
   }
 
+  
+  
+  
+  private void setupCharacter(Node scene) {
+    
+    // Load model, attach to character node
+    Node aiCharacter = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
+
+    AICharacterControl physicsCharacter = new AICharacterControl(0.3f, 2.5f, 1f);
+    aiCharacter.addControl(physicsCharacter);
+    bulletAppState.getPhysicsSpace().add(physicsCharacter);
+    
+    aiCharacter.setLocalScale(50f);
+    scene.attachChild(aiCharacter);
+    NavMeshNavigationControl navMesh = new NavMeshNavigationControl((Node) scene);
+        
+    aiCharacter.addControl(navMesh);
+    navMesh.moveTo(new Vector3f(125, 20, 125));
+  }
+  
+  
+  
+  
+  
+  
   private PhysicsSpace getPhysicsSpace() {
         return bulletAppState.getPhysicsSpace();
     }
@@ -162,7 +209,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
    private void createPlayerCharacter() {
         mainPlayer = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        mainPlayer.setLocalTranslation(200, 10, 0f);
+        //mainPlayer.setLocalTranslation(200, 10, 0f);
+        mainPlayer.setLocalTranslation(-20, 10, 0f);
+
+        
         ChaseCamCharacter charControl = new ChaseCamCharacter(0.5f, 2.5f, 8f);
         charControl.setGravity(normalGravity);
         charControl.setCamera(cam);
@@ -297,6 +347,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(Boulders.checkBoulders()) {
       rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
     }
+    
+    
+    // See where the evilMonkey is
+    EvilMonkey.checkLocation();
+    
+    // See if it is time to spawn another evilMonkey
+    if(EvilMonkey.checkEvilMonkey()) {
+      rootNode.attachChild(EvilMonkey.spawnEvilMonkey(scene, assetManager, bulletAppState.getPhysicsSpace()));
+    }
+    
   }
 
 
@@ -310,6 +370,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
 
   public void collision(PhysicsCollisionEvent event) {
+    
+    //What is it called
+    // check for collisions with the evilMonkey
+    if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+        System.out.println(event.getNodeA().getName());
+                System.out.println(event.getNodeB().getName());
+
+      }
   
   
     // Check for collisions with the crates
@@ -326,6 +394,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
       }
     }
   
+    
+    // check for collisions with the evilMonkey
+    if(event.getNodeA().getName().equals("EvilMonkey") || event.getNodeB().getName().equals("EvilMonkey")) {
+      if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+        
+        System.out.println("Collision with the EvilMoneky!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        
+        EvilMonkey.evilMonkeyCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+      }
+    }
+    
+    
+    
+    
+      
+    
     
     if("sphere1".equals(event.getNodeA().getName()) || "sphere1".equals(event.getNodeB().getName())) {
       
