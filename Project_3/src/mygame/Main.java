@@ -6,6 +6,7 @@ import targets.Boulders;
 import targets.Crates;
 import targets.Elephant;
 import targets.EvilMonkey;
+import targets.Buggy;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -58,6 +59,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   private static final Box side1, side2, side3, side4;
   private Material wall_material;
   
+  public static Material lineMat;
+  
+  
   static {
     side1 = new Box(256, 5, 0.5f);
     side1.scaleTextureCoordinates(new Vector2f(3, 6));
@@ -74,7 +78,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   
   
   
-  private List<Geometry> targets = new ArrayList<Geometry>();
+  //private List<Geometry> targets = new ArrayList<Geometry>();
   private Node mainPlayer;
   
   private Vector3f normalGravity = new Vector3f(0, -9.81f, 0);
@@ -89,12 +93,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   @Override
   public void simpleInitApp() {
     
+    lineMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+//    stateManager.attach(bulletAppState);
+//        stateManager.detach(stateManager.getState(FlyCamAppState.class));
+  
+    
     /** Set up Physics */
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
     
     // Turn this on for debug
-    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+    bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
     
@@ -166,7 +175,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     // Create the elephant for the first time
     rootNode.attachChild(Elephant.spawnElephant(scene, assetManager, bulletAppState.getPhysicsSpace()));
         
-        
+    // Create Buggy for the first time
+    rootNode.attachChild(Buggy.spawnBuggy(scene, mainPlayer, assetManager, bulletAppState.getPhysicsSpace()));
         
         
         
@@ -372,7 +382,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     // See if it is time to spawn another elephant
     if(Elephant.checkElephant()) {
       rootNode.attachChild(Elephant.spawnElephant(scene, assetManager, bulletAppState.getPhysicsSpace()));
-    }    
+    }  
+    
+    // See if it is time to spawn another buggy
+    if(Buggy.checkBuggy()) {
+      rootNode.attachChild(Buggy.spawnBuggy(scene, mainPlayer, assetManager, bulletAppState.getPhysicsSpace()));
+    }     
   }
 
 
@@ -414,7 +429,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
         Elephant.elephantCollision(event, assetManager, bulletAppState.getPhysicsSpace());
       }
-    }     
+    }   
+    
+    // check for collisions with the buggy
+    if(event.getNodeA().getName().equals("Buggy") || event.getNodeB().getName().equals("Buggy")) {
+      if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
+        Buggy.buggyCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+      }
+    }
   }
 }
 

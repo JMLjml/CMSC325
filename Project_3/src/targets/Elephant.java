@@ -7,8 +7,10 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import static targets.Buggy.targetNode;
 
 /**
  *
@@ -44,6 +46,15 @@ public class Elephant {
         
     // Set the start location for the elephant
     elephant.setLocalTranslation(startLocation);
+    
+    // The Elephant needed extra light
+    DirectionalLight sun1 = new DirectionalLight();
+    sun1.setDirection(new Vector3f(-0.1f, -0.7f, 10.0f));
+    targetNode.addLight(sun1);
+        
+    DirectionalLight sun2 = new DirectionalLight();
+    sun2.setDirection(new Vector3f(-0.1f, -0.7f, -10.0f));
+    targetNode.addLight(sun2);
     
     // Add the AI Character control to the elephant and add it to the physics space
     AICharacterControl physicsCharacter = new AICharacterControl(10f, 20f, 100f);
