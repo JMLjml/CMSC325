@@ -12,9 +12,9 @@ import java.util.Collections;
  * Based upon a demo found at http://forum.codecall.net/topic/50071-making-a-simple-high-score-system/
  */
 public class ScoreManager {
-   private static int highScore = 0;
-   private static List<Scores> scores = new ArrayList<Scores>();
-   public static Scores playerScore;
+   private int highScore = 0;
+   private List<Scores> scores;
+   public Scores playerScore;
 
   //Initialising an in and outputStream for working with the file
   private static ObjectOutputStream outputStream = null;
@@ -23,23 +23,34 @@ public class ScoreManager {
   // The name of the file where the highscores will be saved
   private static final String SCORES_FILE = "scores.dat";
    
-  
-
-
-  public static void initScoreManager() {
-    loadHighScores();
-    highScore = scores.get(0).getPlayerScore(); // set the highScore to beat
-    initPlayerScore();
+  public void ScoreManager() {
+    scores = new ArrayList<Scores>();
+    highScore = 0;
+    
   }
 
 
-  public static void initPlayerScore() {
-      playerScore = new Scores("John", 0);
+  public void initScoreManager() {
+    loadHighScores();
+    
+     // set the highScore to beat
+    if(scores != null) {
+      if(!scores.isEmpty()) {
+        highScore = scores.get(0).getPlayerScore();
+      }
+    } else {
+      scores = new ArrayList<Scores>();
+    }
+  }
+
+
+  public void initPlayerScore(String playerName) {
+      playerScore = new Scores(playerName, 0);
   }
 
 
   // Read in the high scores and store them in the Scores List   
-  public static void loadHighScores() {
+  public void loadHighScores() {
     try {
       inputStream = new ObjectInputStream(new FileInputStream(SCORES_FILE));
       scores = (ArrayList<Scores>) inputStream.readObject();
@@ -52,12 +63,16 @@ public class ScoreManager {
     }
 
     // After reading in the scores, sort them
-    ScoresComparator comparator = new ScoresComparator();
-    Collections.sort(scores, comparator);
+    if(scores != null) {
+      if(!scores.isEmpty()) {
+        ScoresComparator comparator = new ScoresComparator();
+        Collections.sort(scores, comparator);
+      }
+    }
   }
 
   // Write the high scores file
-  public static void writeHighScores() {
+  public void writeHighScores() {
     try {
       outputStream = new ObjectOutputStream(new FileOutputStream(SCORES_FILE));
       outputStream.writeObject(scores);
@@ -76,16 +91,21 @@ public class ScoreManager {
       }
     }
   }
-
+  
   // Return the single highest score as an integer only   
-  public static int getHighScore() {
+  public int getHighScore() {
     return highScore;
   }
 
 
-  public static String getHighScores() {
+  public String getHighScores() {
     String highScores = new String();
-    int max = 10;
+    int max = 0;
+    if(scores.size() > 10) {
+      max = 10;
+    } else {
+      max = scores.size();
+    }
 
     for(int i = 0; i < max; i++) {
       highScores += (i + 1) + " : " + scores.get(i).getPlayerName() + "  : " + scores.get(i).getPlayerScore() + "\n";
@@ -95,11 +115,15 @@ public class ScoreManager {
   }
 
   // return true if the player has set a new highScore
-  public static boolean newHighScore() {
+  public boolean newHighScore() {
     return (playerScore.getPlayerScore() > highScore);
   }
 
-
+  public void addPlayerScore() {
+    scores.add(playerScore);
+    ScoresComparator comparator = new ScoresComparator();
+    Collections.sort(scores, comparator);    
+  }
 
 
 
@@ -109,21 +133,14 @@ public class ScoreManager {
   }
 
   // Add points to the playerScore  
-  public static void updateScore(Points point) {
+  public void updateScore(Points point) {
     switch(point) {
     case BOULDER: playerScore.playerScore += 2; break;
     case BUGGY: playerScore.playerScore += 5; break;
-    case BULLET: playerScore.playerScore --; break;
+    case BULLET: playerScore.playerScore-- ; break;
     case CRATE: playerScore.playerScore += 3; break;
     case ELEPHANT: playerScore.playerScore += 2; break;
     case EVILMONKEY: playerScore.playerScore += 10; break;
     }
-  }
-
-  
-
-  
-
-  
-  
+  }  
 }

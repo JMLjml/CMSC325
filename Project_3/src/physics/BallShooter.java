@@ -15,6 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
+import scores.ScoreManager;
 
 
 /**
@@ -23,7 +24,7 @@ import com.jme3.texture.Texture;
  */
 public class BallShooter {
   public static void createBallShooter(final Application app, final Node rootNode,
-                                       final PhysicsSpace space) {
+                                       final PhysicsSpace space, final ScoreManager scoreManager) {
         
     ActionListener actionListener = new ActionListener() {
 
@@ -49,7 +50,8 @@ public class BallShooter {
                   
             rootNode.attachChild(bulletg);
             space.add(bulletControl);
-            Sounds.audio_gun.playInstance(); // play each instance once!                    
+            Sounds.audio_gun.playInstance(); // play each instance once! 
+            scoreManager.updateScore(ScoreManager.Points.BULLET);
           }
         }                    
       };

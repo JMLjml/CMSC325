@@ -131,7 +131,7 @@ public class CharacterInputAnimationAppState extends AbstractAppState implements
         super.cleanup();
         for (InputMapping i : InputMapping.values()) {
             if (inputManager.hasMapping(i.name())) {
-                inputManager.deleteMapping(i.name());
+               inputManager.deleteMapping(i.name());
             }
         }
         inputManager.removeListener(this);

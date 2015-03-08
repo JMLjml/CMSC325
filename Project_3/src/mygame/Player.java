@@ -22,7 +22,7 @@ public class Player {
   private static Vector3f normalGravity = new Vector3f(0, -9.81f, 0);
 
 
-  public static Node createMainPlayer(AppStateManager stateManager, AssetManager assetManager, InputManager inputManager, PhysicsSpace space, Camera cam) {
+  public static Node createMainPlayer(AppStateManager stateManager, AssetManager assetManager, InputManager inputManager, PhysicsSpace space, Camera cam, CharacterInputAnimationAppState charInputAppState) {
 
     mainPlayer = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
     mainPlayer.setLocalTranslation(200, 10, 0f);
@@ -46,19 +46,28 @@ public class Player {
                   
     space.add(charControl);
 
-    CharacterInputAnimationAppState appState = new CharacterInputAnimationAppState();
-    appState.addActionListener(charControl);
-    appState.addAnalogListener(charControl);
-    appState.setChaseCamera(chaseCam);
-    stateManager.attach(appState);
+    
+    charInputAppState.addActionListener(charControl);
+    charInputAppState.addAnalogListener(charControl);
+    charInputAppState.setChaseCamera(chaseCam);
+    stateManager.attach(charInputAppState);
+    
+    //CharacterInputAnimationAppState appState = new CharacterInputAnimationAppState();
+    //appState.addActionListener(charControl);
+    //appState.addAnalogListener(charControl);
+    //appState.setChaseCamera(chaseCam);
+    //stateManager.attach(appState);
     
     inputManager.setCursorVisible(false);
         
     animControl = new AdvAnimationManagerControl("animations/resources/animations-jaime.properties");
     mainPlayer.addControl(animControl);
     
-    appState.addActionListener(animControl);
-    appState.addAnalogListener(animControl);
+    
+    charInputAppState.addActionListener(animControl);
+    charInputAppState.addAnalogListener(animControl);
+    //appState.addActionListener(animControl);
+    //appState.addAnalogListener(animControl);
     
     return mainPlayer;
   }  
