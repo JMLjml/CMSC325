@@ -49,6 +49,7 @@ import java.util.List;
 
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
+import physics.World;
 
 /**
  * 
@@ -57,33 +58,33 @@ import de.lessvoid.nifty.Nifty;
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
   
   private BulletAppState bulletAppState;
-  private RigidBodyControl landscape;
+ // private RigidBodyControl landscape;
   private Node scene;
   
   private AdvAnimationManagerControl animControl;
     
   
   // Variables for the walls of the world
-  private RigidBodyControl side1_phy, side2_phy, side3_phy, side4_phy;
-  private static final Box side1, side2, side3, side4;
-  private Material wall_material;
+//  private RigidBodyControl side1_phy, side2_phy, side3_phy, side4_phy;
+//  private static final Box side1, side2, side3, side4;
+//  private Material wall_material;
   
   public static Material lineMat;
   
   
-  static {
-    side1 = new Box(256, 5, 0.5f);
-    side1.scaleTextureCoordinates(new Vector2f(3, 6));
-          
-    side2 = new Box(0.5f, 5f, 256f);
-    side2.scaleTextureCoordinates(new Vector2f(3, 6));
-          
-    side3 = new Box(256, 5, 0.5f);
-    side3.scaleTextureCoordinates(new Vector2f(3, 6));
-          
-    side4 = new Box(0.5f, 5f, 256f);
-    side4.scaleTextureCoordinates(new Vector2f(3, 6));   
-  }
+//  static {
+//    side1 = new Box(256, 5, 0.5f);
+//    side1.scaleTextureCoordinates(new Vector2f(3, 6));
+//          
+//    side2 = new Box(0.5f, 5f, 256f);
+//    side2.scaleTextureCoordinates(new Vector2f(3, 6));
+//          
+//    side3 = new Box(256, 5, 0.5f);
+//    side3.scaleTextureCoordinates(new Vector2f(3, 6));
+//          
+//    side4 = new Box(0.5f, 5f, 256f);
+//    side4.scaleTextureCoordinates(new Vector2f(3, 6));   
+//  }
   
 
   private Node mainPlayer;
@@ -199,27 +200,27 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
     
-    AmbientLight light = new AmbientLight();
-        light.setColor(ColorRGBA.LightGray);
-        rootNode.addLight(light);
+//    AmbientLight light = new AmbientLight();
+//        light.setColor(ColorRGBA.LightGray);
+//        rootNode.addLight(light);
     
     
-    scene = (Node) assetManager.loadModel("/Scenes/P3_Scene.j3o");
+ //   scene = (Node) assetManager.loadModel("/Scenes/P3_Scene.j3o");
 
-    CollisionShape sceneShape = 
-                CollisionShapeFactory.createMeshShape(scene);
-        landscape = new RigidBodyControl(sceneShape, 0);
-        scene.addControl(landscape);
-    
-    scene.addControl(new RigidBodyControl(0));
-    bulletAppState.getPhysicsSpace().add(scene);
-     bulletAppState.getPhysicsSpace().add(landscape);
-    
+//    CollisionShape sceneShape = 
+//                CollisionShapeFactory.createMeshShape(scene);
+//        landscape = new RigidBodyControl(sceneShape, 0);
+//        scene.addControl(landscape);
+//    
+//    scene.addControl(new RigidBodyControl(0));
+//    bulletAppState.getPhysicsSpace().add(scene);
+//     bulletAppState.getPhysicsSpace().add(landscape);
+//    
      //Attach the scene to the root
+     scene = World.createWorld(assetManager, bulletAppState.getPhysicsSpace());
      rootNode.attachChild(scene);
-     
-     initMaterials();
-     initWalls();
+ //    initMaterials();
+  //   initWalls();
      
      // initialize the game's audio 
      rootNode.attachChild(Sounds.initAudio(assetManager));
@@ -287,76 +288,76 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
   
    /** Initialize the materials used in this scene. */
-  public void initMaterials() {
-    
-    wall_material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-    TextureKey key3 = new TextureKey("Blender/2.4x/textures/WarningStrip.png");
-    key3.setGenerateMips(true);
-    Texture tex3 = assetManager.loadTexture(key3);
-    tex3.setWrap(Texture.WrapMode.Repeat);
-    wall_material.setTexture("ColorMap", tex3);
-    wall_material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-  }
+//  public void initMaterials() {
+//    
+//    wall_material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+//    TextureKey key3 = new TextureKey("Blender/2.4x/textures/WarningStrip.png");
+//    key3.setGenerateMips(true);
+//    Texture tex3 = assetManager.loadTexture(key3);
+//    tex3.setWrap(Texture.WrapMode.Repeat);
+//    wall_material.setTexture("ColorMap", tex3);
+//    wall_material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+//  }
   
    
    
-   // Initialize the collision cube used to contain the spheres
-  public void initWalls() {
-    // Create side1
-    Geometry side1_geo = new Geometry("Side1", side1);
-    side1_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-    side1_geo.setMaterial(wall_material);
-    this.rootNode.attachChild(side1_geo);
-    side1_phy = new RigidBodyControl(0.0f);
-    side1_geo.addControl(side1_phy);
-    bulletAppState.getPhysicsSpace().add(side1_phy);
-    side1_phy.setFriction(0.0f);
-    side1_phy.setPhysicsLocation(new Vector3f(0, 2.5f, 256));
-    side1_phy.setFriction(0.0f);
-    side1_phy.setRestitution(.1f);
-    
-    
-    // Create side2
-    Geometry side2_geo = new Geometry("Side2", side2);
-    side2_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-    side2_geo.setMaterial(wall_material);
-    this.rootNode.attachChild(side2_geo);
-    side2_phy = new RigidBodyControl(0.0f);
-    side2_geo.addControl(side2_phy);
-    bulletAppState.getPhysicsSpace().add(side2_phy);
-    side2_phy.setFriction(0.0f);
-    side2_phy.setPhysicsLocation(new Vector3f(256, 2.5f, 0));
-    side2_phy.setFriction(0.0f);
-    side2_phy.setRestitution(.1f);
-          
-
-    // Create side3
-    Geometry side3_geo = new Geometry("Side3", side3);
-    side3_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-    side3_geo.setMaterial(wall_material);
-    this.rootNode.attachChild(side3_geo);
-    side3_phy = new RigidBodyControl(0.0f);
-    side3_geo.addControl(side3_phy);
-    bulletAppState.getPhysicsSpace().add(side3_phy);
-    side3_phy.setFriction(0.0f);
-    side3_phy.setPhysicsLocation(new Vector3f(0, 2.5f, -256));
-    side3_phy.setFriction(0.0f);
-    side3_phy.setRestitution(.1f);
-          
-          
-     // Create side4
-    Geometry side4_geo = new Geometry("Side4", side4);
-    side4_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-    side4_geo.setMaterial(wall_material);
-    this.rootNode.attachChild(side4_geo);
-    side4_phy = new RigidBodyControl(0.0f);
-    side4_geo.addControl(side4_phy);
-    bulletAppState.getPhysicsSpace().add(side4_phy);
-    side4_phy.setFriction(0.0f);
-    side4_phy.setPhysicsLocation(new Vector3f(-256, 2.5f, 0));
-    side4_phy.setFriction(0.0f);
-    side4_phy.setRestitution(.1f);   
-  }
+//   // Initialize the collision cube used to contain the spheres
+//  public void initWalls() {
+//    // Create side1
+//    Geometry side1_geo = new Geometry("Side1", side1);
+//    side1_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
+//    side1_geo.setMaterial(wall_material);
+//    this.rootNode.attachChild(side1_geo);
+//    side1_phy = new RigidBodyControl(0.0f);
+//    side1_geo.addControl(side1_phy);
+//    bulletAppState.getPhysicsSpace().add(side1_phy);
+//    side1_phy.setFriction(0.0f);
+//    side1_phy.setPhysicsLocation(new Vector3f(0, 2.5f, 256));
+//    side1_phy.setFriction(0.0f);
+//    side1_phy.setRestitution(.1f);
+//    
+//    
+//    // Create side2
+//    Geometry side2_geo = new Geometry("Side2", side2);
+//    side2_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
+//    side2_geo.setMaterial(wall_material);
+//    this.rootNode.attachChild(side2_geo);
+//    side2_phy = new RigidBodyControl(0.0f);
+//    side2_geo.addControl(side2_phy);
+//    bulletAppState.getPhysicsSpace().add(side2_phy);
+//    side2_phy.setFriction(0.0f);
+//    side2_phy.setPhysicsLocation(new Vector3f(256, 2.5f, 0));
+//    side2_phy.setFriction(0.0f);
+//    side2_phy.setRestitution(.1f);
+//          
+//
+//    // Create side3
+//    Geometry side3_geo = new Geometry("Side3", side3);
+//    side3_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
+//    side3_geo.setMaterial(wall_material);
+//    this.rootNode.attachChild(side3_geo);
+//    side3_phy = new RigidBodyControl(0.0f);
+//    side3_geo.addControl(side3_phy);
+//    bulletAppState.getPhysicsSpace().add(side3_phy);
+//    side3_phy.setFriction(0.0f);
+//    side3_phy.setPhysicsLocation(new Vector3f(0, 2.5f, -256));
+//    side3_phy.setFriction(0.0f);
+//    side3_phy.setRestitution(.1f);
+//          
+//          
+//     // Create side4
+//    Geometry side4_geo = new Geometry("Side4", side4);
+//    side4_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
+//    side4_geo.setMaterial(wall_material);
+//    this.rootNode.attachChild(side4_geo);
+//    side4_phy = new RigidBodyControl(0.0f);
+//    side4_geo.addControl(side4_phy);
+//    bulletAppState.getPhysicsSpace().add(side4_phy);
+//    side4_phy.setFriction(0.0f);
+//    side4_phy.setPhysicsLocation(new Vector3f(-256, 2.5f, 0));
+//    side4_phy.setFriction(0.0f);
+//    side4_phy.setRestitution(.1f);   
+//  }
    
    
    
