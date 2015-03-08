@@ -58,46 +58,14 @@ import physics.World;
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
   
   private BulletAppState bulletAppState;
- // private RigidBodyControl landscape;
   private Node scene;
-  
-  private AdvAnimationManagerControl animControl;
-    
-  
-  // Variables for the walls of the world
-//  private RigidBodyControl side1_phy, side2_phy, side3_phy, side4_phy;
-//  private static final Box side1, side2, side3, side4;
-//  private Material wall_material;
-  
   public static Material lineMat;
-  
-  
-//  static {
-//    side1 = new Box(256, 5, 0.5f);
-//    side1.scaleTextureCoordinates(new Vector2f(3, 6));
-//          
-//    side2 = new Box(0.5f, 5f, 256f);
-//    side2.scaleTextureCoordinates(new Vector2f(3, 6));
-//          
-//    side3 = new Box(256, 5, 0.5f);
-//    side3.scaleTextureCoordinates(new Vector2f(3, 6));
-//          
-//    side4 = new Box(0.5f, 5f, 256f);
-//    side4.scaleTextureCoordinates(new Vector2f(3, 6));   
-//  }
-  
-
   private Node mainPlayer;
-  
-  private Vector3f normalGravity = new Vector3f(0, -9.81f, 0);
   
   // Make the app static so we can call the app.stop() method
   private static Main app;
   
-  
   //private gameRunningState    = new GameRunningState(this);
-  
-  
    
   private Trigger pause_trigger = new KeyTrigger(KeyInput.KEY_BACK);
 //  private Trigger save_trigger = new KeyTrigger(KeyInput.KEY_RETURN);
@@ -199,52 +167,31 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
-    
-//    AmbientLight light = new AmbientLight();
-//        light.setColor(ColorRGBA.LightGray);
-//        rootNode.addLight(light);
-    
-    
- //   scene = (Node) assetManager.loadModel("/Scenes/P3_Scene.j3o");
 
-//    CollisionShape sceneShape = 
-//                CollisionShapeFactory.createMeshShape(scene);
-//        landscape = new RigidBodyControl(sceneShape, 0);
-//        scene.addControl(landscape);
-//    
-//    scene.addControl(new RigidBodyControl(0));
-//    bulletAppState.getPhysicsSpace().add(scene);
-//     bulletAppState.getPhysicsSpace().add(landscape);
-//    
-     //Attach the scene to the root
-     scene = World.createWorld(assetManager, bulletAppState.getPhysicsSpace());
-     rootNode.attachChild(scene);
- //    initMaterials();
-  //   initWalls();
+    // Create the world and attach it to the scene node and then to the root node
+    scene = World.createWorld(assetManager, bulletAppState.getPhysicsSpace());
+    rootNode.attachChild(scene);
      
-     // initialize the game's audio 
-     rootNode.attachChild(Sounds.initAudio(assetManager));
+    // initialize the game's audio 
+    rootNode.attachChild(Sounds.initAudio(assetManager));
      
-      // add ourselves as collision listener
+    // add ourselves as collision listener
     getPhysicsSpace().addCollisionListener(this);
      
-     // Create the player and initialize the players scores
-     mainPlayer = Player.createMainPlayer(stateManager, assetManager, inputManager, bulletAppState.getPhysicsSpace(), cam);
-     rootNode.attachChild(mainPlayer);
-     ScoreManager.initPlayerScore();
+    // Create the player and initialize the players scores
+    mainPlayer = Player.createMainPlayer(stateManager, assetManager, inputManager, bulletAppState.getPhysicsSpace(), cam);
+    rootNode.attachChild(mainPlayer);
+    ScoreManager.initPlayerScore();
       
-       //Add the "bullets" to the scene to allow the player to shoot the balls
-       BallShooter.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
+    //Add the "bullets" to the scene to allow the player to shoot the balls
+    BallShooter.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
 
-        
-        // Create the target crates for the first time
-        rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
-        
-
-        // Create the target boulders for the first time
-        rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
+    // Create the target crates for the first time
+    rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
+    
+    // Create the target boulders for the first time
+    rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
             
-        
     // Create the evilMonkey for the first time
     rootNode.attachChild(EvilMonkey.spawnEvilMonkey(scene, assetManager, bulletAppState.getPhysicsSpace()));
         
@@ -254,116 +201,29 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     // Create Buggy for the first time
     rootNode.attachChild(Buggy.spawnBuggy(scene, mainPlayer, assetManager, bulletAppState.getPhysicsSpace()));
         
-        
-        
-        
-        
-        
-        
-        //Add a custom font and text to the scene
-        BitmapFont myFont = assetManager.loadFont("Interface/Fonts/DroidSansMono.fnt");
-        
-        
-         // Create the crosshairs for the ball shooter
-        BitmapText crosshairs = new BitmapText(myFont, true); 
-        crosshairs.setText("X");
-        crosshairs.setColor(ColorRGBA.Yellow);
-        crosshairs.setSize(guiFont.getCharSet().getRenderedSize());
-        crosshairs.setLocalTranslation(settings.getWidth() / 2,
-            settings.getHeight() / 2 + crosshairs.getLineHeight() - 30, 0f);
-        guiNode.attachChild(crosshairs);                 
-                
+    //Add a custom font and text to the scene
+    BitmapFont myFont = assetManager.loadFont("Interface/Fonts/DroidSansMono.fnt");
+            
+    // Create the crosshairs for the ball shooter
+    BitmapText crosshairs = new BitmapText(myFont, true); 
+    crosshairs.setText("X");
+    crosshairs.setColor(ColorRGBA.Yellow);
+    crosshairs.setSize(guiFont.getCharSet().getRenderedSize());
+    crosshairs.setLocalTranslation(settings.getWidth() / 2,
+                                   settings.getHeight() / 2 + crosshairs.getLineHeight() - 30, 0f);
+    guiNode.attachChild(crosshairs);                 
   }
-
-
-  
-  
-  
   
   
   private PhysicsSpace getPhysicsSpace() {
-        return bulletAppState.getPhysicsSpace();
-    }
+    return bulletAppState.getPhysicsSpace();
+  }
   
-    
-  
-   /** Initialize the materials used in this scene. */
-//  public void initMaterials() {
-//    
-//    wall_material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-//    TextureKey key3 = new TextureKey("Blender/2.4x/textures/WarningStrip.png");
-//    key3.setGenerateMips(true);
-//    Texture tex3 = assetManager.loadTexture(key3);
-//    tex3.setWrap(Texture.WrapMode.Repeat);
-//    wall_material.setTexture("ColorMap", tex3);
-//    wall_material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-//  }
-  
-   
-   
-//   // Initialize the collision cube used to contain the spheres
-//  public void initWalls() {
-//    // Create side1
-//    Geometry side1_geo = new Geometry("Side1", side1);
-//    side1_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-//    side1_geo.setMaterial(wall_material);
-//    this.rootNode.attachChild(side1_geo);
-//    side1_phy = new RigidBodyControl(0.0f);
-//    side1_geo.addControl(side1_phy);
-//    bulletAppState.getPhysicsSpace().add(side1_phy);
-//    side1_phy.setFriction(0.0f);
-//    side1_phy.setPhysicsLocation(new Vector3f(0, 2.5f, 256));
-//    side1_phy.setFriction(0.0f);
-//    side1_phy.setRestitution(.1f);
-//    
-//    
-//    // Create side2
-//    Geometry side2_geo = new Geometry("Side2", side2);
-//    side2_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-//    side2_geo.setMaterial(wall_material);
-//    this.rootNode.attachChild(side2_geo);
-//    side2_phy = new RigidBodyControl(0.0f);
-//    side2_geo.addControl(side2_phy);
-//    bulletAppState.getPhysicsSpace().add(side2_phy);
-//    side2_phy.setFriction(0.0f);
-//    side2_phy.setPhysicsLocation(new Vector3f(256, 2.5f, 0));
-//    side2_phy.setFriction(0.0f);
-//    side2_phy.setRestitution(.1f);
-//          
-//
-//    // Create side3
-//    Geometry side3_geo = new Geometry("Side3", side3);
-//    side3_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-//    side3_geo.setMaterial(wall_material);
-//    this.rootNode.attachChild(side3_geo);
-//    side3_phy = new RigidBodyControl(0.0f);
-//    side3_geo.addControl(side3_phy);
-//    bulletAppState.getPhysicsSpace().add(side3_phy);
-//    side3_phy.setFriction(0.0f);
-//    side3_phy.setPhysicsLocation(new Vector3f(0, 2.5f, -256));
-//    side3_phy.setFriction(0.0f);
-//    side3_phy.setRestitution(.1f);
-//          
-//          
-//     // Create side4
-//    Geometry side4_geo = new Geometry("Side4", side4);
-//    side4_geo.setQueueBucket(RenderQueue.Bucket.Transparent);
-//    side4_geo.setMaterial(wall_material);
-//    this.rootNode.attachChild(side4_geo);
-//    side4_phy = new RigidBodyControl(0.0f);
-//    side4_geo.addControl(side4_phy);
-//    bulletAppState.getPhysicsSpace().add(side4_phy);
-//    side4_phy.setFriction(0.0f);
-//    side4_phy.setPhysicsLocation(new Vector3f(-256, 2.5f, 0));
-//    side4_phy.setFriction(0.0f);
-//    side4_phy.setRestitution(.1f);   
-//  }
-   
-   
+     
    
   @Override
   public void simpleUpdate(float tpf) {
-
+    
     // See if it is time to spawn more crates
     if(Crates.checkCrates()) {
       rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));
@@ -397,17 +257,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   }
 
 
-
-
   @Override
   public void simpleRender(RenderManager rm) {
     //TODO: add render code
   }
 
 
-
   public void collision(PhysicsCollisionEvent event) {
-   
+    
     // Check for collisions with the crates
     if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
