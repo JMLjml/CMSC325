@@ -7,6 +7,8 @@ import targets.Crates;
 import targets.Elephant;
 import targets.EvilMonkey;
 import targets.Buggy;
+import scores.Scores;
+import scores.ScoreManager;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -32,6 +34,10 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.Trigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.RenderState;
 import com.jme3.math.Vector2f;
@@ -40,6 +46,9 @@ import com.jme3.scene.Node;
 import com.jme3.texture.Texture;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.Nifty;
 
 /**
  * 
@@ -76,34 +85,117 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     side4.scaleTextureCoordinates(new Vector2f(3, 6));   
   }
   
-  
-  
-  //private List<Geometry> targets = new ArrayList<Geometry>();
+
   private Node mainPlayer;
   
   private Vector3f normalGravity = new Vector3f(0, -9.81f, 0);
+  
+  // Make the app static so we can call the app.stop() method
+  private static Main app;
+  
+  
+  //private gameRunningState    = new GameRunningState(this);
+  
+  
+   
+  private Trigger pause_trigger = new KeyTrigger(KeyInput.KEY_BACK);
+//  private Trigger save_trigger = new KeyTrigger(KeyInput.KEY_RETURN);
+  private boolean isRunning = false; // starts at startscreen
 
   public static void main(String[] args) {
-    Main app = new Main();
+    
+    
+    app = new Main();
+    
+    //ScoreManager.initScoreManager();
+    // Display welcome screen
+    // make the welcome screen call the initPlayerScore() and 
+    // app.start() method after collecting playername
+    
     app.start();
+    
+    // Call app.stop somewhere to end the app
+    
+    // Display ending screen
+    
   }
-  private float COUNT_FACTOR_F;
-  private boolean POINT_SPRITE;
+
+  
+  
+//  private ActionListener actionListener = new ActionListener() {
+//    public void onAction(String name, boolean isPressed, float tpf) {
+//      System.out.println("key" + name);
+//      if (name.equals("Game Pause Unpause") && !isPressed) {
+//        if (isRunning) {
+//          stateManager.detach(bulletAppState);
+//          stateManager.attach(startScreenState);
+//          System.out.println("switching to startscreen...");
+// 
+//        } else {
+//          stateManager.detach(startScreenState);
+//          stateManager.attach(bulletAppState);
+//          System.out.println("switching to game...");
+//        }
+//        isRunning = !isRunning;
+//      } 
+      
+//      else if (name.equals("Toggle Settings") && !isPressed && !isRunning) {
+//        if (!isRunning && stateManager.hasState(startScreenState)) {
+//          stateManager.detach(startScreenState);
+//          stateManager.attach(settingsScreenState);
+//          System.out.println("switching to settings...");
+//        } else if (!isRunning && stateManager.hasState(settingsScreenState)) {
+//          stateManager.detach(settingsScreenState);
+//          stateManager.attach(startScreenState);
+//          System.out.println("switching to startscreen...");
+//        }
+      //}
+  //  }
+  //};
+  
+  
 
   @Override
   public void simpleInitApp() {
     
+    
+    /* If you want to switch back and forth then you could create and add both 
+     * of them during simpleInit and just setEnabled(false) the game state. 
+     * Main menu can enable it and disable itself and whatever menu key can 
+     * reverse that to bring back the menu.
+     * 
+     * In that case, you want to do your showing/hiding/attaching/removing 
+     * scene elements, etc. in the setEnabled() as appropriate. */
+    
+    
+
+    
+    
+    
+    
+    
+    //startScreenState    = new StartScreenState(this);
+    
+    //stateManager.attach(startScreenState);
+    
+    
+    // inputManager.addMapping("Game Pause Unpause", pause_trigger);
+   // inputManager.addListener(actionListener, new String[]{"Game Pause Unpause"});
+    
+    
+    
     lineMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-//    stateManager.attach(bulletAppState);
-//        stateManager.detach(stateManager.getState(FlyCamAppState.class));
+
   
     
     /** Set up Physics */
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
     
+    
+    
     // Turn this on for debug
-    bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
     
@@ -111,13 +203,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         light.setColor(ColorRGBA.LightGray);
         rootNode.addLight(light);
     
-    // Set the start position for he camera
-    //cam.getLocation().set(0,60,0);
-    //cam.update();
-        
-    // Add the Scene And create collision physics to match the terrain
-    //Spatial scene = assetManager.loadModel("/Scenes/P3_Scene3.j3o");
-    scene = (Node) assetManager.loadModel("/Scenes/P3_Scene3.j3o");
+    
+    scene = (Node) assetManager.loadModel("/Scenes/P3_Scene.j3o");
 
     CollisionShape sceneShape = 
                 CollisionShapeFactory.createMeshShape(scene);
@@ -133,21 +220,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
      
      initMaterials();
      initWalls();
-     //initAudio(); // The old way
+     
+     // initialize the game's audio 
      rootNode.attachChild(Sounds.initAudio(assetManager));
      
       // add ourselves as collision listener
     getPhysicsSpace().addCollisionListener(this);
      
-     
-      createPlayerCharacter();
+     // Create the player and initialize the players scores
+     mainPlayer = Player.createMainPlayer(stateManager, assetManager, inputManager, bulletAppState.getPhysicsSpace(), cam);
+     rootNode.attachChild(mainPlayer);
+     ScoreManager.initPlayerScore();
       
        //Add the "bullets" to the scene to allow the player to shoot the balls
-//        PhysicsTestHelper.createBallShooter(this,rootNode,bulletAppState.getPhysicsSpace(),
-//            sinbadAppState, targets, guiNode, hitText);
-//        
-        BallShooter.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
-      //  PhysicsTestHelper.createMyPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace(), targets);
+       BallShooter.createBallShooter(this, rootNode, bulletAppState.getPhysicsSpace());
 
         
         // Create the target crates for the first time
@@ -156,17 +242,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         // Create the target boulders for the first time
         rootNode.attachChild(Boulders.spawnBoulders(assetManager, bulletAppState.getPhysicsSpace()));
-               
-       
- 
-        //TODO: navmesh only for debug
-    Geometry navGeom = new Geometry("NavMesh");
-    navGeom.setMesh(((Geometry) scene.getChild("NavMesh" )).getMesh());
-    Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-    green.setColor("Color", ColorRGBA.Green);
-    green.getAdditionalRenderState().setWireframe(true);
-    navGeom.setMaterial(green);
-    rootNode.attachChild(navGeom); 
             
         
     // Create the evilMonkey for the first time
@@ -199,26 +274,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 
   }
 
-  
-  
-  
-  private void setupCharacter(Node scene) {
-    
-    // Load model, attach to character node
-    Node aiCharacter = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
 
-    AICharacterControl physicsCharacter = new AICharacterControl(0.3f, 2.5f, 1f);
-    aiCharacter.addControl(physicsCharacter);
-    bulletAppState.getPhysicsSpace().add(physicsCharacter);
-    
-    aiCharacter.setLocalScale(50f);
-    scene.attachChild(aiCharacter);
-    NavMeshNavigationControl navMesh = new NavMeshNavigationControl((Node) scene);
-        
-    aiCharacter.addControl(navMesh);
-    navMesh.moveTo(new Vector3f(125, 20, 125));
-  }
-  
   
   
   
@@ -229,60 +285,54 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
   
     
-   private void createPlayerCharacter() {
-        mainPlayer = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        //mainPlayer.setLocalTranslation(200, 10, 0f);
-        mainPlayer.setLocalTranslation(-20, 10, 0f);
-
-        
-        ChaseCamCharacter charControl = new ChaseCamCharacter(0.5f, 2.5f, 8f);
-        charControl.setGravity(normalGravity);
-        charControl.setCamera(cam);
-        
-        ChaseCamera chaseCam = new ChaseCamera(cam, mainPlayer, inputManager);
-        chaseCam.setDragToRotate(false);
-        chaseCam.setSmoothMotion(true);
-        chaseCam.setLookAtOffset(new Vector3f(0f, 2.7f, -0.1f));
-        chaseCam.setDefaultDistance(1.75f);
-        chaseCam.setMaxDistance(2f);
-        chaseCam.setMinDistance(1.5f);
-       
-        chaseCam.setTrailingSensitivity(50);
-        chaseCam.setChasingSensitivity(10);
-        chaseCam.setRotationSpeed(10);
-        //chaseCam.setDragToRotate(true);
-        //chaseCam.setToggleRotationTrigger();
-
-        mainPlayer.addControl(charControl);
-        //mainPlayer.addControl(new RigidBodyControl(1));
-                 
-        bulletAppState.getPhysicsSpace().add(charControl);
-
-        CharacterInputAnimationAppState appState = new CharacterInputAnimationAppState();
-        appState.addActionListener(charControl);
-        appState.addAnalogListener(charControl);
-        appState.setChaseCamera(chaseCam);
-        stateManager.attach(appState);
-        rootNode.attachChild(mainPlayer);
-        inputManager.setCursorVisible(false);
-        
-        animControl = new AdvAnimationManagerControl("animations/resources/animations-jaime.properties");
-        mainPlayer.addControl(animControl);
-        
-        appState.addActionListener(animControl);
-        appState.addAnalogListener(animControl);
-    }
+//   private void createPlayerCharacter() {
+//        mainPlayer = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
+//        //mainPlayer.setLocalTranslation(200, 10, 0f);
+//        mainPlayer.setLocalTranslation(-20, 10, 0f);
+//
+//        
+//        ChaseCamCharacter charControl = new ChaseCamCharacter(0.5f, 2.5f, 8f);
+//        charControl.setGravity(normalGravity);
+//        charControl.setCamera(cam);
+//        
+//        ChaseCamera chaseCam = new ChaseCamera(cam, mainPlayer, inputManager);
+//        chaseCam.setDragToRotate(false);
+//        chaseCam.setSmoothMotion(true);
+//        chaseCam.setLookAtOffset(new Vector3f(0f, 2.7f, -0.1f));
+//        chaseCam.setDefaultDistance(1.75f);
+//        chaseCam.setMaxDistance(2f);
+//        chaseCam.setMinDistance(1.5f);
+//       
+//        chaseCam.setTrailingSensitivity(50);
+//        chaseCam.setChasingSensitivity(10);
+//        chaseCam.setRotationSpeed(10);
+//        
+//
+//        mainPlayer.addControl(charControl);
+// 
+//                 
+//        bulletAppState.getPhysicsSpace().add(charControl);
+//
+//        CharacterInputAnimationAppState appState = new CharacterInputAnimationAppState();
+//        appState.addActionListener(charControl);
+//        appState.addAnalogListener(charControl);
+//        appState.setChaseCamera(chaseCam);
+//        stateManager.attach(appState);
+//        rootNode.attachChild(mainPlayer);
+//        inputManager.setCursorVisible(false);
+//        
+//        animControl = new AdvAnimationManagerControl("animations/resources/animations-jaime.properties");
+//        mainPlayer.addControl(animControl);
+//        
+//        appState.addActionListener(animControl);
+//        appState.addAnalogListener(animControl);
+//    }
   
   
    
    
    /** Initialize the materials used in this scene. */
   public void initMaterials() {
-//    stone_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-//    TextureKey key2 = new TextureKey("Textures/Terrain/Rock/Rock.PNG");
-//    key2.setGenerateMips(true);
-//    Texture tex2 = assetManager.loadTexture(key2);
-//    stone_mat.setTexture("ColorMap", tex2);
     
     wall_material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
     TextureKey key3 = new TextureKey("Blender/2.4x/textures/WarningStrip.png");
@@ -406,6 +456,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(event.getNodeA().getName().equals("crate") || event.getNodeB().getName().equals("crate")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
         Crates.crateCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+        ScoreManager.updateScore(ScoreManager.Points.CRATE);
+        ScoreManager.updateScore(ScoreManager.Points.BULLET);
       }
     }
   
@@ -413,6 +465,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(event.getNodeA().getName().equals("boulder") || event.getNodeB().getName().equals("boulder")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
         Boulders.boulderCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+        ScoreManager.updateScore(ScoreManager.Points.BOULDER);
+        ScoreManager.updateScore(ScoreManager.Points.BULLET);
       }
     }
      
@@ -420,6 +474,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(event.getNodeA().getName().equals("EvilMonkey") || event.getNodeB().getName().equals("EvilMonkey")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
         EvilMonkey.evilMonkeyCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+        ScoreManager.updateScore(ScoreManager.Points.EVILMONKEY);
+        ScoreManager.updateScore(ScoreManager.Points.BULLET);
       }
     }
     
@@ -428,6 +484,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(event.getNodeA().getName().equals("Elephant") || event.getNodeB().getName().equals("Elephant")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
         Elephant.elephantCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+        ScoreManager.updateScore(ScoreManager.Points.ELEPHANT);
+        ScoreManager.updateScore(ScoreManager.Points.BULLET);
       }
     }   
     
@@ -435,6 +493,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     if(event.getNodeA().getName().equals("Buggy") || event.getNodeB().getName().equals("Buggy")) {
       if(event.getNodeA().getName().equals("bullet") || event.getNodeB().getName().equals("bullet")) {
         Buggy.buggyCollision(event, assetManager, bulletAppState.getPhysicsSpace());
+        ScoreManager.updateScore(ScoreManager.Points.BUGGY);
+        ScoreManager.updateScore(ScoreManager.Points.BULLET);
       }
     }
   }
