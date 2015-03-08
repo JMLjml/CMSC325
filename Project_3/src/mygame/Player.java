@@ -40,12 +40,10 @@ public class Player {
     chaseCam.setMinDistance(1.5f);       
     chaseCam.setTrailingSensitivity(50);
     chaseCam.setChasingSensitivity(10);
-    chaseCam.setRotationSpeed(10);
-        
+    chaseCam.setRotationSpeed(10);        
 
     mainPlayer.addControl(charControl);
- 
-                 
+                  
     space.add(charControl);
 
     CharacterInputAnimationAppState appState = new CharacterInputAnimationAppState();
@@ -62,8 +60,7 @@ public class Player {
     appState.addActionListener(animControl);
     appState.addAnalogListener(animControl);
     
-    return mainPlayer;       
- 
+    return mainPlayer;
   }  
 }
 
