@@ -25,7 +25,7 @@ import com.jme3.texture.Texture;
 public class World {
   private static RigidBodyControl landscape;
   private static Node scene;
- 
+  
   // Variables for the walls of the world
   private static RigidBodyControl side1_phy, side2_phy, side3_phy, side4_phy;
   private static final Box side1, side2, side3, side4;
@@ -56,7 +56,7 @@ public class World {
 
     // Load the scene we created
     scene = (Node) assetManager.loadModel("/Scenes/P3_Scene.j3o");
-
+    
     // Add some collision physics to the scene
     CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(scene);
     landscape = new RigidBodyControl(sceneShape, 0);
@@ -68,7 +68,7 @@ public class World {
 
     initMaterials(assetManager);
     initWalls(space);
-
+    
     AmbientLight light = new AmbientLight();
     light.setColor(ColorRGBA.LightGray);
     scene.addLight(light);
@@ -116,7 +116,7 @@ public class World {
     side2_phy.setPhysicsLocation(new Vector3f(256, 2.5f, 0));
     side2_phy.setFriction(0.0f);
     side2_phy.setRestitution(.1f);
-          
+    
 
     // Create side3
     Geometry side3_geo = new Geometry("Side3", side3);

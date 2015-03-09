@@ -12,11 +12,11 @@ import java.util.Collections;
  * Based upon a demo found at http://forum.codecall.net/topic/50071-making-a-simple-high-score-system/
  */
 public class ScoreManager {
-   private int highScore = 0;
-   private List<Scores> scores;
-   public Scores playerScore;
-   
-   private int ballsShot, cratesHit, bouldersHit, evilMonkeysHit, elephantsHit, buggysHit;
+  private int highScore = 0;
+  private List<Scores> scores;
+  public Scores playerScore;
+  
+  private int ballsShot, cratesHit, bouldersHit, evilMonkeysHit, elephantsHit, buggysHit;
 
   //Initialising an in and outputStream for working with the file
   private static ObjectOutputStream outputStream = null;
@@ -52,7 +52,7 @@ public class ScoreManager {
 
 
   public void initPlayerScore(String playerName) {
-      playerScore = new Scores(playerName, 0);
+    playerScore = new Scores(playerName, 0);
   }
 
 
@@ -68,7 +68,7 @@ public class ScoreManager {
     } catch (ClassNotFoundException e) {
       System.out.println("Class Not Found Error: " + e.getMessage());
     }
-
+    
     // After reading in the scores, sort them
     if(scores != null) {
       if(!scores.isEmpty()) {
@@ -77,7 +77,7 @@ public class ScoreManager {
       }
     }
   }
-
+  
   // Write the high scores file
   public void writeHighScores() {
     try {
@@ -103,8 +103,8 @@ public class ScoreManager {
   public int getHighScore() {
     return highScore;
   }
-
-
+  
+  
   public String getHighScores() {
     String highScores = new String();
     int max = 0;
@@ -113,32 +113,32 @@ public class ScoreManager {
     } else {
       max = scores.size();
     }
-
+    
     for(int i = 0; i < max; i++) {
       highScores += (i + 1) + " : " + scores.get(i).getPlayerName() + "  : " + scores.get(i).getPlayerScore() + "\n";
     }
-
+    
     return highScores;
   }
-
+  
   // return true if the player has set a new highScore
   public boolean newHighScore() {
     return (playerScore.getPlayerScore() > highScore);
   }
-
+  
   public void addPlayerScore() {
     scores.add(playerScore);
     ScoresComparator comparator = new ScoresComparator();
     Collections.sort(scores, comparator);    
   }
+  
 
-
-
+  
   // Enum used for calculating points to apply to score
   public static enum Points {
     BOULDER, BUGGY, BULLET, CRATE, ELEPHANT, EVILMONKEY
   }
-
+  
   // Add points to the playerScore  
   public void updateScore(Points point) {
     switch(point) {

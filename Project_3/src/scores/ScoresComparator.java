@@ -13,11 +13,11 @@ public class ScoresComparator implements Comparator<Scores> {
     if (score1.getPlayerScore() > score2.getPlayerScore()) {
       return -1;
     }
-
+    
     else if (score1.getPlayerScore() < score2.getPlayerScore()) {
       return 1;
     }
-
+    
     else {
       return 0;
     }

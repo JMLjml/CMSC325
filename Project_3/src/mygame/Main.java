@@ -2,10 +2,7 @@ package mygame;
 
 import gui.StartGUI;
 import gui.EndGUI;
-//import gui.PausedGUI;
 import physics.World;
-import appstate.GameRunningAppState;
-import appstate.PausedAppState;
 import physics.BallShooter;
 import effects.Sounds;
 import targets.Boulders;
@@ -13,58 +10,26 @@ import targets.Crates;
 import targets.Elephant;
 import targets.EvilMonkey;
 import targets.Buggy;
-import scores.Scores;
 import scores.ScoreManager;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
-import animations.AdvAnimationManagerControl;
 import animations.CharacterInputAnimationAppState;
-import characters.AICharacterControl;
-import characters.ChaseCamCharacter;
-import characters.NavMeshNavigationControl;
 import com.jme3.app.FlyCamAppState;
-import com.jme3.asset.TextureKey;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
-import com.jme3.input.ChaseCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.Trigger;
 import com.jme3.light.AmbientLight;
-import com.jme3.material.RenderState;
-import com.jme3.math.Vector2f;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
-import com.jme3.texture.Texture;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.jme3.niftygui.NiftyJmeDisplay;
-import de.lessvoid.nifty.Nifty;
-
-import com.jme3.app.Application;
-import com.jme3.input.MouseInput;
-import com.jme3.input.controls.MouseButtonTrigger;
-import java.awt.event.ActionEvent;
-
-
-import java.io.Console;
 import java.util.Date;
-import java.util.HashSet;
 
 
 
@@ -77,25 +42,15 @@ import java.util.HashSet;
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
   
   private BulletAppState bulletAppState;
-  
-  private GameRunningAppState gameRunningAppState;
-  
-  private PausedAppState pausedAppState;
-  
-  private CharacterInputAnimationAppState charInputAppState;
-  
-  
+   
   private Node scene;
   public static Material lineMat;
   private Node mainPlayer;
   
   // Make the app static so we can call the app.stop() method
   private static Main app;
-  
-  //private gameRunningState    = new GameRunningState(this);
    
   private Trigger pause_trigger = new KeyTrigger(KeyInput.KEY_BACK);
-//  private Trigger save_trigger = new KeyTrigger(KeyInput.KEY_RETURN);
   private boolean isRunning = true; 
   
   private static ScoreManager scoreManager;
@@ -138,12 +93,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
   };
   
-        
-        
-
- 
-  
-
   @Override
   public void simpleInitApp() {
 
@@ -151,32 +100,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     date = new Date();
     endTime = date.getTime() + 300000;
     
-     inputManager.addMapping("Game Pause Unpause", pause_trigger);
+    inputManager.addMapping("Game Pause Unpause", pause_trigger);
     inputManager.addListener(actionListener, new String[]{"Game Pause Unpause"});
-    
-    
+   
     
     lineMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
    
     AmbientLight light = new AmbientLight();
     light.setColor(ColorRGBA.LightGray);
     rootNode.addLight(light);
-
-
-
     
     
     /** Set up Physics */
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
-    
-    
-    //creat the charInputAppState 
-   // charInputAppState = new CharacterInputAnimationAppState();
-    
-    
-    // Turn this on for debug
-    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     
     stateManager.detach(stateManager.getState(FlyCamAppState.class));
 
@@ -330,10 +267,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     score.setText("Player Score : " + scoreManager.getPlayerScore());
     timeRemaining.setText("Time Remaining : " + ((endTime - date.getTime()) / 1000));
     
-    
-    
-    
-    
+  
     // See if it is time to spawn more crates
     if(Crates.checkCrates()) {
       rootNode.attachChild(Crates.spawnCrates(assetManager, bulletAppState.getPhysicsSpace()));

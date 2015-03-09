@@ -46,12 +46,6 @@ public class Player {
                   
     space.add(charControl);
 
-    
-//    charInputAppState.addActionListener(charControl);
-//    charInputAppState.addAnalogListener(charControl);
-//    charInputAppState.setChaseCamera(chaseCam);
-//    stateManager.attach(charInputAppState);
-    
     CharacterInputAnimationAppState appState = new CharacterInputAnimationAppState();
     appState.addActionListener(charControl);
     appState.addAnalogListener(charControl);
@@ -62,10 +56,6 @@ public class Player {
         
     animControl = new AdvAnimationManagerControl("animations/resources/animations-jaime.properties");
     mainPlayer.addControl(animControl);
-    
-    
-    //charInputAppState.addActionListener(animControl);
-    //charInputAppState.addAnalogListener(animControl);
     appState.addActionListener(animControl);
     appState.addAnalogListener(animControl);
     
