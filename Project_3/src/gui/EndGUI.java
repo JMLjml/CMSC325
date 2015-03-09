@@ -42,6 +42,5 @@ public class EndGUI extends JFrame {
     this.setLocation(500,200);
     this.setVisible(true);
     this.setAlwaysOnTop(true);
-  }
-  
+  }  
 }

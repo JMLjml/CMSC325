@@ -15,6 +15,8 @@ public class ScoreManager {
    private int highScore = 0;
    private List<Scores> scores;
    public Scores playerScore;
+   
+   private int ballsShot, cratesHit, bouldersHit, evilMonkeysHit, elephantsHit, buggysHit;
 
   //Initialising an in and outputStream for working with the file
   private static ObjectOutputStream outputStream = null;
@@ -26,7 +28,12 @@ public class ScoreManager {
   public void ScoreManager() {
     scores = new ArrayList<Scores>();
     highScore = 0;
-    
+    ballsShot = 0;
+    cratesHit = 0;
+    bouldersHit = 0;
+    evilMonkeysHit = 0;
+    elephantsHit = 0;
+    buggysHit = 0;    
   }
 
 
@@ -135,12 +142,40 @@ public class ScoreManager {
   // Add points to the playerScore  
   public void updateScore(Points point) {
     switch(point) {
-    case BOULDER: playerScore.playerScore += 2; break;
-    case BUGGY: playerScore.playerScore += 5; break;
-    case BULLET: playerScore.playerScore-- ; break;
-    case CRATE: playerScore.playerScore += 3; break;
-    case ELEPHANT: playerScore.playerScore += 2; break;
-    case EVILMONKEY: playerScore.playerScore += 10; break;
+    case BOULDER: playerScore.playerScore += 2; bouldersHit++; break;
+    case BUGGY: playerScore.playerScore += 5; buggysHit++; break;
+    case BULLET: playerScore.playerScore-- ; ballsShot++; break;
+    case CRATE: playerScore.playerScore += 3; cratesHit++; break;
+    case ELEPHANT: playerScore.playerScore += 2; elephantsHit++; break;
+    case EVILMONKEY: playerScore.playerScore += 10; evilMonkeysHit++; break;
     }
-  }  
+  }
+  
+  public int getBallsShot() {
+    return ballsShot;
+  }
+  
+  public int getBouldersHit() {
+    return bouldersHit;
+  }
+  
+  public int getBuggysHit() {
+    return buggysHit;
+  }
+  
+  public int getCratesHit() {
+    return cratesHit;
+  }
+  
+  public int getElephantsHit() {
+    return elephantsHit;
+  }
+  
+  public int getEvilMonkeysHit() {
+    return evilMonkeysHit;
+  }
+  
+  public int getPlayerScore() {
+    return playerScore.playerScore;
+  }
 }

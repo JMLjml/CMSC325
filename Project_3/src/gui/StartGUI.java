@@ -24,11 +24,11 @@ public class StartGUI extends JFrame {
   
   
   private String instrux = " Welcome to Monkey Shooter! \n\n Controls are simple, WASD or arrows to move, space"
-    + "to jump, and left-mouse to fire balls at targets. \n Press backspace to exit the game. \n \n"
+    + " to jump, and left-mouse to fire balls at targets. \n Press backspace to exit the game. \n \n"
     + " Points are awared for hits, and each ball shot costs one point, so don't miss.\n\n"
     + " There are five types of targets. Some move from waypoint to waypoint, and another will "
     + "follow you if you get too close. All targets respawn after they have been completely destroyed."
-    + "\n\n Enter your name above to be included in the high scores roster and press enter.\n\n"
+    + "\n\n Enter your name above to be included in the high scores roster and PRESS ENTER.\n\n"
     + " ENJOY!";
   
 

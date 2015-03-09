@@ -59,8 +59,15 @@ import de.lessvoid.nifty.Nifty;
 import com.jme3.app.Application;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.MouseButtonTrigger;
+import java.awt.event.ActionEvent;
+
+
 import java.io.Console;
+import java.util.Date;
 import java.util.HashSet;
+
+
+
 
 
 /**
@@ -92,6 +99,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   private boolean isRunning = true; 
   
   private static ScoreManager scoreManager;
+  
+  private Date date;
+  private long endTime;
+  
+  private static BitmapText ballsShot, buggysHit, bouldersHit, cratesHit, elephantsHit, evilMonkeysHit, score, timeRemaining;
           
   public static void main(String[] args) {
     app = new Main();
@@ -110,14 +122,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   private void shutDown() {
     scoreManager.addPlayerScore();
     scoreManager.writeHighScores();
-    System.out.println(scoreManager.getHighScores());
     app.stop();
-    
     EndGUI gui = new EndGUI(scoreManager);
-    
-    
-    
-    //show gyui with scores
   }
   
   private ActionListener actionListener = new ActionListener() {
@@ -135,13 +141,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         
         
 
-  
+ 
   
 
   @Override
   public void simpleInitApp() {
 
-    
+    // Set the endTime for game over
+    date = new Date();
+    endTime = date.getTime() + 300000;
     
      inputManager.addMapping("Game Pause Unpause", pause_trigger);
     inputManager.addListener(actionListener, new String[]{"Game Pause Unpause"});
@@ -149,12 +157,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
     
     lineMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-
-    
-  //  pausedAppState = new PausedAppState();
- //   stateManager.attach(pausedAppState);
- //   pausedAppState.setEnabled(paused);
-    
+   
     AmbientLight light = new AmbientLight();
     light.setColor(ColorRGBA.LightGray);
     rootNode.addLight(light);
@@ -210,6 +213,19 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     // Create Buggy for the first time
     rootNode.attachChild(Buggy.spawnBuggy(scene, mainPlayer, assetManager, bulletAppState.getPhysicsSpace()));
         
+    // Init the HUD
+    initHud();
+  }
+  
+  
+  private PhysicsSpace getPhysicsSpace() {
+    return bulletAppState.getPhysicsSpace();
+  }
+  
+    
+  
+  public void initHud() {
+    
     //Add a custom font and text to the scene
     BitmapFont myFont = assetManager.loadFont("Interface/Fonts/DroidSansMono.fnt");
             
@@ -221,17 +237,102 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     crosshairs.setLocalTranslation(settings.getWidth() / 2,
                                    settings.getHeight() / 2 + crosshairs.getLineHeight() - 30, 0f);
     guiNode.attachChild(crosshairs);                 
+    
+    ballsShot = new BitmapText(myFont, true);
+    ballsShot.setName("ballsShot");
+    ballsShot.setText("Balls Shot : 0");
+    ballsShot.setColor(ColorRGBA.Red);
+    ballsShot.setSize(guiFont.getCharSet().getRenderedSize());   
+    ballsShot.setLocalTranslation(20, settings.getHeight() - 20, 0f);
+    guiNode.attachChild(ballsShot);
+    
+    bouldersHit = new BitmapText(myFont, true);
+    bouldersHit.setName("bouldersHit");
+    bouldersHit.setText("Boulders Hit : 0");
+    bouldersHit.setColor(ColorRGBA.Red);
+    bouldersHit.setSize(guiFont.getCharSet().getRenderedSize());   
+    bouldersHit.setLocalTranslation(20, settings.getHeight() - 40, 0f);
+    guiNode.attachChild(bouldersHit);
+
+    buggysHit = new BitmapText(myFont, true);
+    buggysHit.setName("buggysHit");
+    buggysHit.setText("Buggys Hit : 0");
+    buggysHit.setColor(ColorRGBA.Red);
+    buggysHit.setSize(guiFont.getCharSet().getRenderedSize());   
+    buggysHit.setLocalTranslation(20, settings.getHeight() - 60, 0f);
+    guiNode.attachChild(buggysHit);
+
+    cratesHit = new BitmapText(myFont, true);
+    cratesHit.setName("cratesHit");
+    cratesHit.setText("Crates Hit : 0");
+    cratesHit.setColor(ColorRGBA.Red);
+    cratesHit.setSize(guiFont.getCharSet().getRenderedSize());   
+    cratesHit.setLocalTranslation(20, settings.getHeight() - 80, 0f);
+    guiNode.attachChild(cratesHit);
+
+    elephantsHit = new BitmapText(myFont, true);
+    elephantsHit.setName("elephantsHit");
+    elephantsHit.setText("Elephants Hit : 0");
+    elephantsHit.setColor(ColorRGBA.Red);
+    elephantsHit.setSize(guiFont.getCharSet().getRenderedSize());   
+    elephantsHit.setLocalTranslation(20, settings.getHeight() - 100, 0f);
+    guiNode.attachChild(elephantsHit);
+
+    evilMonkeysHit = new BitmapText(myFont, true);
+    evilMonkeysHit.setName("evilMonkeysHit");
+    evilMonkeysHit.setText("EvilMonkeys Hit : 0");
+    evilMonkeysHit.setColor(ColorRGBA.Red);
+    evilMonkeysHit.setSize(guiFont.getCharSet().getRenderedSize());   
+    evilMonkeysHit.setLocalTranslation(20, settings.getHeight() - 120, 0f);
+    guiNode.attachChild(evilMonkeysHit);
+
+    score = new BitmapText(myFont, true);
+    score.setName("score");
+    score.setText("Player Score : 0");
+    score.setColor(ColorRGBA.Blue);
+    score.setSize(guiFont.getCharSet().getRenderedSize());   
+    score.setLocalTranslation(20, settings.getHeight() - 140, 0f);
+    guiNode.attachChild(score);
+
+
+    timeRemaining = new BitmapText(myFont, true);
+    timeRemaining.setName("timeRemaining");
+    timeRemaining.setText("Time Remaining : 300");
+    timeRemaining.setColor(ColorRGBA.Red);
+    timeRemaining.setSize(guiFont.getCharSet().getRenderedSize());   
+    timeRemaining.setLocalTranslation(settings.getWidth() / 2, settings.getHeight() - 20, 0f);
+    guiNode.attachChild(timeRemaining);
   }
   
   
-  private PhysicsSpace getPhysicsSpace() {
-    return bulletAppState.getPhysicsSpace();
-  }
   
-     
+  
    
   @Override
   public void simpleUpdate(float tpf) {
+
+    // Get the current time and see if five minutes have passed
+    date = new Date();
+    
+    //If five minutes have passed it is time to end the game
+    if(date.getTime() >= endTime) {
+      shutDown();
+    }
+
+
+    // update the HUD
+    ballsShot.setText("Balls Shot : " + scoreManager.getBallsShot());
+    bouldersHit.setText("Boulders Hit : " + scoreManager.getBouldersHit());
+    buggysHit.setText("Buggys Hit : " + scoreManager.getBuggysHit());
+    cratesHit.setText("Crates Hit : " + scoreManager.getCratesHit());
+    elephantsHit.setText("Elephants Hit : " + scoreManager.getElephantsHit());
+    evilMonkeysHit.setText("EvilMonkeys Hit : " + scoreManager.getEvilMonkeysHit());
+    score.setText("Player Score : " + scoreManager.getPlayerScore());
+    timeRemaining.setText("Time Remaining : " + ((endTime - date.getTime()) / 1000));
+    
+    
+    
+    
     
     // See if it is time to spawn more crates
     if(Crates.checkCrates()) {
