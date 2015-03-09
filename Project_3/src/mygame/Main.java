@@ -1,7 +1,8 @@
 package mygame;
 
 import gui.StartGUI;
-import gui.PausedGUI;
+import gui.EndGUI;
+//import gui.PausedGUI;
 import physics.World;
 import appstate.GameRunningAppState;
 import appstate.PausedAppState;
@@ -93,34 +94,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   private static ScoreManager scoreManager;
           
   public static void main(String[] args) {
-    
-   
-    
-    
     app = new Main();
     
+    // Setup The Scores Manager
     scoreManager = new ScoreManager();
-    
     scoreManager.initScoreManager();
+    
+    // Show the startup GUI
     StartGUI gui = new StartGUI(scoreManager);
-    //StartGUI.main(args);
-  
-    
    
-    // Display welcome screen
-    // make the welcome screen call the initPlayerScore() and 
-    // app.start() method after collecting playername
-    
-    //StartGUI gui = new StartGUI();
-    
-    app.start();
-    
-    
-    
-    // Call app.stop somewhere to end the app
-    
-    // Display ending screen
-    
+    app.start();    
   }
 
 
@@ -129,6 +112,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     scoreManager.writeHighScores();
     System.out.println(scoreManager.getHighScores());
     app.stop();
+    
+    EndGUI gui = new EndGUI(scoreManager);
+    
+    
+    
     //show gyui with scores
   }
   
@@ -137,27 +125,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
       System.out.println("key" + name);
       if (name.equals("Game Pause Unpause") && !isPressed) {
         if(isRunning) {
-//          pausedAppState.setEnabled(true);
-//          isRunning = false;
-//          bulletAppState.setEnabled(paused);
-//          charInputAppState.setEnabled(paused);
-//          inputManager.setCursorVisible(true);
-//          flyCam.setEnabled(false);
-//          inputManager.deleteMapping("shoot");
-          shutDown();
-          
 
-          
-          
-//        } else {
-//          pausedAppState.setEnabled(false);
-//          isRunning = true;
-//          bulletAppState.setEnabled(true);
-//          charInputAppState.setEnabled(true);
-//          inputManager.setCursorVisible(false);
-//          flyCam.setEnabled(true);
-//          BallShooter.createBallShooter(app, rootNode, bulletAppState.getPhysicsSpace());  
-        }
+          shutDown();
+         }
       }
     }
   };
@@ -181,11 +151,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     lineMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 
     
-    pausedAppState = new PausedAppState();
-    stateManager.attach(pausedAppState);
-    pausedAppState.setEnabled(paused);
+  //  pausedAppState = new PausedAppState();
+ //   stateManager.attach(pausedAppState);
+ //   pausedAppState.setEnabled(paused);
     
-    
+    AmbientLight light = new AmbientLight();
+    light.setColor(ColorRGBA.LightGray);
+    rootNode.addLight(light);
 
 
 
@@ -197,7 +169,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
     
     //creat the charInputAppState 
-    charInputAppState = new CharacterInputAnimationAppState();
+   // charInputAppState = new CharacterInputAnimationAppState();
     
     
     // Turn this on for debug
@@ -216,7 +188,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     getPhysicsSpace().addCollisionListener(this);
      
     // Create the player and initialize the players scores
-    mainPlayer = Player.createMainPlayer(stateManager, assetManager, inputManager, bulletAppState.getPhysicsSpace(), cam, charInputAppState);
+    mainPlayer = Player.createMainPlayer(stateManager, assetManager, inputManager, bulletAppState.getPhysicsSpace(), cam);
     rootNode.attachChild(mainPlayer);
     
       
